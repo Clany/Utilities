@@ -1,7 +1,7 @@
-#ifndef __CLANY_TIMER_HPP__
-#define __CLANY_TIMER_HPP__
+#ifndef CLANY_TIMER_HPP
+#define CLANY_TIMER_HPP
 
-#ifdef WIN32
+#if defined(WIN32) || defined(_WIN32) || defined(__MINGW32__)
 #  include <ctime>
 #  define CLOCK()  clock()
 #  define TICK_FACTOR  CLOCKS_PER_SEC
@@ -9,7 +9,7 @@
 #  include <sys/times.h>
 #  define CLOCK()  ::times(NULL)
 #  define TICK_FACTOR  TICK_PER_SECOND
-static const int TICK_PER_SECOND = ::sysconf(_SC_CLK_TCK);
+   static const int TICK_PER_SECOND = ::sysconf(_SC_CLK_TCK);
 #endif
 
 #include <iostream>
@@ -106,4 +106,4 @@ private:
 };
 _CLANY_END
 
-#endif
+#endif // CLANY_TIMER_HPP

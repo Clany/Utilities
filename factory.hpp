@@ -1,5 +1,5 @@
-#ifndef __CLANY_FACTORY_HPP__
-#define __CLANY_FACTORY_HPP__
+#ifndef CLANY_FACTORY_HPP
+#define CLANY_FACTORY_HPP
 
 #include <map>
 #include <memory>
@@ -36,8 +36,6 @@ private:
     map<IDType, CreateFunc> creators_;
 
 public:
-    typedef IDType IDType;
-
     static bool addType(const IDType& ID, const CreateFunc& creator)
     {
         auto& creators = instance().creators_;
@@ -86,4 +84,4 @@ namespace { \
     const bool add_shape = clany::ObjFactory<DerivedType::base>::addType(#DerivedType, Factory<DerivedType>()); \
 }
 
-#endif // __CLANY_FACTORY_HPP__
+#endif // CLANY_FACTORY_HPP

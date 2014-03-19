@@ -1,32 +1,41 @@
-#ifndef __CLANY_FILE_HANDLE_HPP__
-#define __CLANY_FILE_HANDLE_HPP__
+#ifndef CLANY_FILE_HANDLE_HPP
+#define CLANY_FILE_HANDLE_HPP
 
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <iterator>
+#include <stdexcept>
 #include <limits>
 
-#if defined(WIN32) || defined(_WIN32)
-   #include <windows.h>
-   #include <tchar.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__MINGW32__)
+#  include <windows.h>
+#  include <tchar.h>
+#  undef max
+#  undef min
 #else
-   #include <dirent.h>
+#  include <dirent.h>
 #endif
 
 #include "clany/clany_macros.h"
 
-#if defined (min) || defined (max)
-#undef max
-#undef min
-#endif
-
 _CLANY_BEGIN
 using ifsbuf_iter = istreambuf_iterator<char>;
+
+class FileExcept :public runtime_error
+{
+public:
+    FileExcept(const string& err_msg) :runtime_error(err_msg) {};
+};
+
 
 inline string fileToString(const string& file_name)
 {
     ifstream ifs {file_name};
+    if (!ifs.is_open()) {
+        throw FileExcept("Could not open file " + file_name);
+    }
+
     return string {ifsbuf_iter{ifs}, ifsbuf_iter{}};
 }
 
@@ -56,15 +65,6 @@ inline string getLineStr(ifstream& file, int num)
 
     return curr_line;
 }
-
-
-class Directory
-{
-public:
-    static std::vector<std::string> GetListFiles  ( const std::string& path, const std::string & exten = "*", bool addPath = true );
-    static std::vector<std::string> GetListFilesR ( const std::string& path, const std::string & exten = "*", bool addPath = true );
-    static std::vector<std::string> GetListFolders( const std::string& path, const std::string & exten = "*", bool addPath = true );
-};
 _CLANY_END
 
-#endif
+#endif // CLANY_FILE_HANDLE_HPP

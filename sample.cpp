@@ -1,5 +1,3 @@
-#include "headers.h"
-
 #include "timer.hpp"
 #include "file_operation.hpp"
 #include "factory.hpp"
@@ -26,7 +24,7 @@ public:
 };
 
 
-void main()
+int main(int argc, char* argv[])
 {
     CPUTimer timer;
 
@@ -44,4 +42,6 @@ void main()
     ProdFactory::removeType("Derived Type");
 
     timer.elapsed();
+	
+	return 0;
 }

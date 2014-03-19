@@ -1,5 +1,5 @@
-#ifndef __EIGEN_HPP__
-#define __EIGEN_HPP__
+#ifndef CLANY_EIGEN_HPP
+#define CLANY_EIGEN_HPP
 
 #include <iostream>
 #include "Eigen/Dense"
@@ -103,4 +103,4 @@ inline void SVDSolve(const Matrix_<T, M, N>& A, Vector<T, N>& x,
 }
 
 }
-#endif // __EIGEN_HPP__
+#endif // CLANY_EIGEN_HPP
