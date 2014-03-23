@@ -17,26 +17,16 @@ public:
 };
 
 
-template<typename BaseType, typename IDType = string>
+template<typename BaseType, typename IDType = string,
+         typename CreateFunc = shared_ptr<BaseType>()>
 class ObjFactory
 {
 private:
-    typedef shared_ptr<BaseType> BasePtr;
-    typedef function<BasePtr()> CreateFunc;
-
-    ObjFactory() {};
-    ObjFactory(const ObjFactory&) = delete;
-    ObjFactory& operator= (const ObjFactory&) = delete;
-
-    static ObjFactory& instance()
-    {
-        static ObjFactory obj_factory;
-        return obj_factory;
-    }
-    map<IDType, CreateFunc> creators_;
+    using BasePtr = shared_ptr<BaseType>;
+    using Creator = function<CreateFunc>;
 
 public:
-    static bool addType(const IDType& ID, const CreateFunc& creator)
+    static bool addType(const IDType& ID, const Creator& creator)
     {
         auto& creators = instance().creators_;
         if (creators.find(ID) == creators.end()) {
@@ -58,30 +48,46 @@ public:
         return false;
     }
 
-    static BasePtr create(const IDType& ID)
+
+    template<typename... Args>
+    static BasePtr create(const IDType& ID, Args&&... args)
     {
         auto& creators = instance().creators_;
         auto iter = creators.find(ID);
         if (iter != creators.end()) {
-            return (iter->second)();
+            return (iter->second)(forward<Args>(args)...);
         }
 
         return nullptr;
     }
+
+private:
+    ObjFactory() {};
+    ObjFactory(const ObjFactory&) = delete;
+    ObjFactory& operator= (const ObjFactory&) = delete;
+
+    static ObjFactory& instance()
+    {
+        static ObjFactory obj_factory;
+        return obj_factory;
+    }
+
+    map<IDType, Creator> creators_;
 };
 _CLANY_END
+
 
 // Use these macro in your .cpp file
 #define REGISTER_TO_FACTORY(BaseType, DerivedType) \
 namespace { \
-    const bool add_shape = clany::ObjFactory<BaseType>::addType(#DerivedType, Factory<DerivedType>()); \
+    const bool add = clany::ObjFactory<BaseType>::addType(#DerivedType, clany::Factory<DerivedType>()); \
 }
 
 
 // Need to use "typedef BaseType base" in derived class
 #define REGISTER_TYPE_TO_FACTORY(DerivedType) \
 namespace { \
-    const bool add_shape = clany::ObjFactory<DerivedType::base>::addType(#DerivedType, Factory<DerivedType>()); \
+    const bool add = clany::ObjFactory<DerivedType::base>::addType(#DerivedType, clany::Factory<DerivedType>()); \
 }
 
 #endif // CLANY_FACTORY_HPP

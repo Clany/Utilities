@@ -9,7 +9,7 @@ using namespace clany;
 class Base
 {
 public:
-    using BasePtr = shared_ptr<Base>;
+    using Ptr = shared_ptr<Base>;
 
     virtual void foo() { cout << "calling base foo()" << endl; }
 };
@@ -28,15 +28,15 @@ int main(int argc, char* argv[])
 {
     CPUTimer timer;
 
-    Base::BasePtr base;
-    auto factory = Factory<Derived>();
+    Base::Ptr base;
+    Factory<Derived> factory;
     base = factory();
     base = factory(1, true);
 
-    using ProdFactory = ObjFactory<Base>;
-    ProdFactory::addType("Derived Type", bind(Factory<Derived>(), 1, false));
+    using ProdFactory = ObjFactory<Base, string, Base::Ptr(int, bool)>;
+    ProdFactory::addType("Derived Type", Factory<Derived>());
 
-    base = ProdFactory::create("Derived Type");
+    base = ProdFactory::create("Derived Type", 1, false);
     base->foo();
 
     ProdFactory::removeType("Derived Type");
