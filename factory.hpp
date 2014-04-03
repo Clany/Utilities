@@ -77,17 +77,24 @@ private:
 _CLANY_END
 
 
-// Use these macro in your .cpp file
+// Use these macro in *.cpp file
 #define REGISTER_TO_FACTORY(BaseType, DerivedType) \
 namespace { \
-    const bool add = clany::ObjFactory<BaseType>::addType(#DerivedType, clany::Factory<DerivedType>()); \
+    const bool ADD_##DerivedType = clany::ObjFactory<BaseType>::addType(#DerivedType, clany::Factory<DerivedType>()); \
 }
 
 
-// Need to use "typedef BaseType base" in derived class
+// Have "typedef BaseType base" in derived class
 #define REGISTER_TYPE_TO_FACTORY(DerivedType) \
 namespace { \
-    const bool add = clany::ObjFactory<DerivedType::base>::addType(#DerivedType, clany::Factory<DerivedType>()); \
+    const bool ADD_##DerivedType = clany::ObjFactory<DerivedType::base>::addType(#DerivedType, clany::Factory<DerivedType>()); \
+}
+
+
+// Custom creator
+#define REGISTER_TO_FACTORY_WITH_CREATOR(BaseType, DerivedType, Creator) \
+namespace { \
+    const bool ADD_##DerivedType = clany::ObjFactory<BaseType, string, Creator>::addType(#DerivedType, clany::Factory<DerivedType>()); \
 }
 
 #endif // CLANY_FACTORY_HPP
