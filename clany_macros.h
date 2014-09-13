@@ -18,6 +18,11 @@
   (os) << "DBG: " << __FILE__ << "(" << __LINE__ << ") " \
        << msg << std::endl
 
+#if !(__cplusplus >= 201103L)
+#  define constexpr const
+#  define noexcept
+#endif
+
 typedef unsigned short ushort;
 typedef unsigned char uchar;
 typedef unsigned int uint;
