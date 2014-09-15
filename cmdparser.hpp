@@ -51,22 +51,24 @@ public:
         if (pos == opt_idx_vec.size()) return -1;
         curr_idx = opt_idx_vec[pos++];
 
-        char opt_char;
-        bool next_is_arg;
-        const auto& option = arg_vec[curr_idx.first];
-
-        if (!curr_idx.second) opt_char = option[1];                                     // Short option
-        else opt_char = long_opt_map.at(option.substr(2, option.find('=') - 2)).val;    // Long option
-
-        try { next_is_arg = parseArg(); }
-        catch (const ParseError& err) {
-            cerr << "Invalid command line arguments, " << err.what() << endl;
-            exit(1);
+        string option = arg_vec[curr_idx.first];
+        if (!curr_idx.second) {     // Short option
+            if (opt_map.find(option[1]) == opt_map.end()) return '?';
+            opt_char = option[1];
+        } else {                    // Long option
+            option = option.substr(2, option.find('=') - 2);
+            if (long_opt_map.find(option) == long_opt_map.end()) return '?';
+            opt_char = long_opt_map.at(option).val;
         }
+        bool next_is_arg = parseArg();
+        if (opt_arg == ":") return ':';
 
         // Update the index of next option to be processed
-        if (pos != opt_idx_vec.size()) next_idx = opt_idx_vec[pos].first;
-        else next_idx = opt_idx_vec.back().first + (next_is_arg ? 2 : 1);
+        if (pos != opt_idx_vec.size()) {
+            next_idx = opt_idx_vec[pos].first;
+        } else {
+            next_idx = opt_idx_vec.back().first + (next_is_arg ? 2 : 1);
+        }
 
         return opt_char;
     }
@@ -92,7 +94,8 @@ public:
         auto old_curr_idx = curr_idx;
         auto old_opt_arg  = opt_arg;
 
-        findArg(name);
+        if (!findArg(name)) throw ParseError("Argument not found or not required!");
+
         istringstream ss(opt_arg);
         T parsed_arg;
         ss >> parsed_arg;
@@ -108,8 +111,11 @@ private:
         // Get all possible options
         char last_opt;
         for (const auto& opt : options) {
-            if (opt != ':') opt_map.emplace(opt, Option {opt, 0}), last_opt = opt;
-            else opt_map.at(last_opt).has_arg++;
+            if (opt != ':') {
+                opt_map.emplace(opt, Option {opt, 0}), last_opt = opt;
+            } else {
+                opt_map.at(last_opt).has_arg++;
+            }
         }
         // Extract all options and long options in arg_vec, store index
         for (size_t i = 0; i < arg_vec.size(); ++i) {
@@ -131,41 +137,42 @@ private:
             opt_arg = parseArg(option, next_arg,
                                opt_map.at(option[0]).has_arg);
         }
-        return !opt_arg.empty() && opt_arg != string("\0", 1) &&
-                opt_arg == arg_vec[curr_idx.first + 1];
+        return !opt_arg.empty() && opt_arg == next_arg;
     }
 
     string parseArg(const string& option, const string& next, int has_argument) const {
-        if (!has_argument) return string("\0", 1);
+        // Option does not require an argument
+        if (!has_argument) return NULL_CHARACTER;
 
         size_t eq_sign_pos = option.find('=');
         string arg = eq_sign_pos == string::npos ? option.substr(1) : option.substr(eq_sign_pos + 1);
         string name = option.substr(0, eq_sign_pos);
 
         if (!arg.empty()) return arg;
-        if (!next.empty() && next[1] != '-') return next;
+        if (!next.empty() && next[0] != '-') return next;
 
-        if (has_argument == 1) throw ParseError("'" + name + "' requires argument but not provided!");
+        // Option require an argument but not found
+        if (has_argument == 1) return ":";
 
         return "";
     }
 
-    void findArg(const string& name) {
+    bool findArg(const string& name) {
         // Traverse all possible options
         for (const auto& idx : opt_idx_vec) {
             auto option = arg_vec[idx.first];
+            // Check if match any short/long option
             if (name == option.substr(1, 1) ||
                 name == option.substr(2, option.find('=') - 2)) {
                 curr_idx = idx;
-                try {
-                    parseArg();
-                    if (opt_arg == string("\0", 1)) throw ParseError("'" + name + "' does not require argument!");
-                } catch (const ParseError& err) {
-                    cerr << "Invalid command line arguments, " << err.what() << endl;
-                    exit(1);
-        }}}
+                parseArg();
+                if (opt_arg == NULL_CHARACTER || opt_arg == ":") return false;
+            }
+        }
+        return true;
     }
 
+private:
     // All commandline arguments
     vector<string> arg_vec;
     // Option index in arg_vec, second element is true if it's a long option
@@ -175,12 +182,16 @@ private:
 
     // Index of next option to be processed
     int next_idx;
-    // argument of current option
+    // Current option
+    char opt_char;
+    // Argument of current option
     string opt_arg;
 
     // User defined available options
     map<char, Option>       opt_map;
     map<string, LongOption> long_opt_map;
+
+    const string NULL_CHARACTER = string("\0", 1);
 };
 
 template<>
@@ -194,7 +205,7 @@ inline string CmdLineParser::parse<string>(const string& name) {
     auto old_curr_idx = curr_idx;
     auto old_opt_arg  = opt_arg;
 
-    findArg(name);
+    if (!findArg(name)) throw ParseError("Argument not found or not required!");
     string parsed_arg = opt_arg;
 
     curr_idx = old_curr_idx;
