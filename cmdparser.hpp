@@ -42,7 +42,7 @@ public:
         : CmdLineParser(argc, argv, options) {
         // Store user provided long options
         for (const auto& lopt : long_options) {
-            long_opt_map.emplace(lopt.name, lopt);
+            long_opt_map.insert({lopt.name, lopt});
         }
     }
 
@@ -112,7 +112,7 @@ private:
         char last_opt;
         for (const auto& opt : options) {
             if (opt != ':') {
-                opt_map.emplace(opt, Option {opt, 0}), last_opt = opt;
+                opt_map.insert({opt, Option {opt, 0}}), last_opt = opt;
             } else {
                 opt_map.at(last_opt).has_arg++;
             }
@@ -176,12 +176,12 @@ private:
     // All commandline arguments
     vector<string> arg_vec;
     // Option index in arg_vec, second element is true if it's a long option
-    vector<pair<int, bool>> opt_idx_vec;
-    int pos;
-    pair<int, bool> curr_idx;
+    vector<pair<size_t, bool>> opt_idx_vec;
+    size_t pos;
+    pair<size_t, bool> curr_idx;
 
     // Index of next option to be processed
-    int next_idx;
+    size_t next_idx;
     // Current option
     char opt_char;
     // Argument of current option
