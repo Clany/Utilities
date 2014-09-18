@@ -1,6 +1,6 @@
-#include "timer.hpp"
-#include "file_operation.hpp"
-#include "factory.hpp"
+#include "clany/timer.hpp"
+#include "clany/file_operation.hpp"
+#include "clany/factory.hpp"
 
 using namespace std;
 using namespace clany;
