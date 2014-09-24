@@ -8,11 +8,10 @@
 #include <stdexcept>
 #include <limits>
 
-#if defined(WIN32) || defined(_WIN32) || defined(__MINGW32__)
-#  include <windows.h>
-#  include <tchar.h>
-#  undef max
-#  undef min
+#ifdef _WIN32
+// #  define NOMINMAX
+// #  include <windows.h>
+// #  include <tchar.h>
 #else
 #  include <dirent.h>
 #endif
@@ -36,7 +35,7 @@ inline string fileToString(const string& file_name)
         throw FileExcept("Could not open file " + file_name);
     }
 
-    return string (ifsbuf_iter(ifs), ifsbuf_iter());
+    return string(ifsbuf_iter(ifs), ifsbuf_iter());
 }
 
 
