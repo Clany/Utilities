@@ -8,15 +8,13 @@
 #include <stdexcept>
 #include <limits>
 
-#ifdef _WIN32
-// #  define NOMINMAX
-// #  include <windows.h>
-// #  include <tchar.h>
+#if defined _WIN32 && defined _MSC_VER && _MSC_VER >= 1800
+#  include <filesystem>
 #else
 #  include <dirent.h>
 #endif
 
-#include "clany_macros.h"
+#include "clany_defs.h"
 
 _CLANY_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;

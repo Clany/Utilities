@@ -5,7 +5,7 @@
 #include <iterator>
 #include <iostream>
 #include <memory>
-#include "clany_macros.h"
+#include "clany_defs.h"
 
 _CLANY_BEGIN
 #define  CLANY_ADD_RGB \
@@ -221,4 +221,4 @@ public:
 };
 _CLANY_END
 
-#endif
+#endif // CLANY_POINT_TYPES_HPP
