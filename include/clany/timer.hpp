@@ -74,7 +74,7 @@ public:
         }
     }
 
-    double elapsed(int precision = 3, string process_name = "Since begin")
+    double elapsed(string process_name = "Since begin", int precision = 3)
     {
         if (is_stopped_) {
             cout << "Paused" << endl;
@@ -92,7 +92,7 @@ public:
         return since_begin;
     }
     
-    double delta(int precision = 3, string process_name = "Since last check")
+    double delta(string process_name = "Since last check", int precision = 3)
     {
         if (is_stopped_) {
             cout << "Paused" << endl;
