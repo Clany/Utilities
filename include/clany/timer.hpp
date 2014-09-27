@@ -23,7 +23,7 @@ _CLANY_BEGIN
 class ScopeTimer
 {
 public:
-    ScopeTimer(int precision = 3) :timer_ (CLOCK()), precision_ (precision) {}
+    explicit ScopeTimer(int precision = 3) :timer_ (CLOCK()), precision_ (precision) {}
 
     ~ScopeTimer()
     {
@@ -42,7 +42,7 @@ private:
 class CPUTimer
 {
 public:
-    CPUTimer(bool is_started = true) :
+    explicit CPUTimer(bool is_started = true) :
         timer_(0), duration_berfore_(0), is_stopped_(false)
     {
         if (is_started) {

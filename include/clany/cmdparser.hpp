@@ -10,7 +10,7 @@
 _CLANY_BEGIN
 class ParseError : public logic_error {
 public:
-    ParseError(const std::string& err_msg)
+    explicit ParseError(const std::string& err_msg)
         : logic_error(err_msg) {
     }
 };
