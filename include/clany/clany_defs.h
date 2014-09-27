@@ -10,6 +10,7 @@
 #  define CLANY_EXPORTS
 #endif
 
+#undef ASSERT
 #ifdef _MSC_VER
 #  include <crtdbg.h>
 #  define ASSERT _ASSERTE
@@ -32,12 +33,19 @@
 #  define VERIFY(expression) (expression)
 #endif
 
-typedef unsigned short ushort;
-typedef unsigned char uchar;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef long long llong;
-typedef unsigned long long ullong;
+#if !(__cplusplus >= 201103L)
+#  undef noexcept
+#  undef constexpr
+#  define noexcept throw()
+#  define constexpr const
+#endif
+
+using ushort = unsigned short;
+using uchar  = unsigned char;
+using uint   = unsigned int;
+using ulong  = unsigned long;
+using ullong = unsigned long long;
+using llong  = long long;
 
 _CLANY_BEGIN
 using namespace std;
