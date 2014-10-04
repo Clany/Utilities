@@ -29,7 +29,7 @@
 #include "cmdparser.hpp"
 #include "timer.hpp"
 #include "file_operation.hpp"
-#include "traits.hpp"
 #include "factory.hpp"
+#include "traits.hpp"
 
 #endif // CLANY_UTILITIES_H
