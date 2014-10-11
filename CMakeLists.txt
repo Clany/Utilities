@@ -59,7 +59,7 @@ set(HEADER_LIST
   include/clany/eigen.hpp
   include/clany/point_types.hpp
   include/clany/byte_array.hpp
-  
+  include/clany/dyn_bitset.hpp
 )
 
 add_executable(utilities ${SRC_LIST} ${HEADER_LIST})

@@ -28,6 +28,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 #include "clany_defs.h"
 
 _CLANY_BEGIN
@@ -47,12 +49,10 @@ public:
         : Base(first, last) {}
 #endif
 
-    // Allow implicit conversion
-    ByteArray(const char* data, int size = -1)
+    explicit ByteArray(const char* data, int size = -1)
         : Base(data, data + (size < 0 ? strlen(data) : size)) {}
 
-    // Allow implicit conversion
-    ByteArray(const string& data)
+    explicit ByteArray(const string& data)
         : Base(data.begin(), data.end()) {}
 
     // Allow implicit conversion
@@ -102,6 +102,18 @@ inline bool operator==(const ByteArray& left, const ByteArray& right)
 inline bool operator!=(const ByteArray& left, const ByteArray& right)
 {
     return !(left == right);
+}
+
+inline ostream& operator<<(ostream& os, const ByteArray& byte_arr)
+{
+    stringstream ss;
+    ss.flags(ios::right | ios::hex);
+    ss.fill('0');
+    for_each(byte_arr.begin(), byte_arr.end(), [&ss](uchar c) {
+        ss << setw(2) << (int)c << " ";
+    });
+    os << ss.str();
+    return os;
 }
 _CLANY_END
 

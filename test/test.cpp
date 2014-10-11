@@ -1,5 +1,6 @@
 #include <forward_list>
-#include "clany/utilities.h"
+#include <clany/utilities.h>
+#include <clany/dyn_bitset.hpp>
 
 using namespace std;
 using namespace clany;
@@ -47,6 +48,13 @@ struct CmdArgs {
 int main(int argc, char* argv[])
 {
     CPUTimer timer;
+
+    BitField bit_field(13, "0110111010111");
+    cout << bit_field << endl;
+    for (auto i = 0; i < 13; ++i) {
+        cout << bit_field[i];
+    }
+    cout << endl;
 
     // Command line parser
     // Test arguments: --name=Clany -a "441 S Dunn St Apt 5" -c47401 -p --file "..\CMakeLists.txt"
