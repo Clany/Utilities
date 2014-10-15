@@ -30,14 +30,46 @@
 #include "clany_defs.h"
 
 _CLANY_BEGIN
-//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+// Container traits
+template<typename T, typename = void>
+struct is_container : false_type
+{};
+
+template<typename T>
+struct is_container<T, typename enable_if<!is_same<typename remove_reference<T>::type::iterator,
+                    void>::value>::type> : true_type
+{};
+
+template<typename T, size_t N>
+struct is_container<T[N], void> : true_type
+{};
+
+// Print container elements
+template<typename Container>
+inline typename enable_if<clany::is_container<Container>::value, ostream&>::type
+operator<<(ostream& os, Container&& container)
+{
+    auto b_iter = begin(container);
+    auto l_iter = end(container);
+    os << *b_iter++;
+    while (b_iter != l_iter) {
+        os << ", " << *b_iter;
+        ++b_iter;
+    }
+    os << endl;
+    return os;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 // Iterator traits
 template<typename T, typename = void>
 struct is_iterator : false_type
 {};
 
 template<typename T>
-struct is_iterator<T, typename enable_if<!is_same<typename T::iterator_category, void>::value>::type> : true_type
+struct is_iterator<T, typename enable_if<!is_same<typename T::iterator_category,
+                   void>::value>::type> : true_type
 {};
 
 template<typename T>

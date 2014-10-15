@@ -20,7 +20,8 @@ endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-find_package(Boost REQUIRED COMPONENTS filesystem thread)
+#find_package(Boost REQUIRED COMPONENTS filesystem thread)
+find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 # target_link_libraries(<target> ${Boost_LIBRARIES})
 

@@ -26,6 +26,7 @@
 #define CLANY_UTILITIES_H
 
 #include "clany_defs.h"
+#include "algorithm.hpp"
 #include "cmdparser.hpp"
 #include "timer.hpp"
 #include "file_operation.hpp"

@@ -1,4 +1,5 @@
 #include <forward_list>
+#include <random>
 #include <clany/utilities.h>
 #include <clany/dyn_bitset.hpp>
 
@@ -59,7 +60,7 @@ int main(int argc, char* argv[])
     // Command line parser
     // Test arguments: --name=Clany -a "441 S Dunn St Apt 5" -c47401 -p --file "..\CMakeLists.txt"
     int t_argc = 9;
-    char* t_argv[] = {
+    const char* t_argv[] = {
         "Path to executable",
         "--name=Clany",
         "-a",
