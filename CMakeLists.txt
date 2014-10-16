@@ -8,8 +8,8 @@ list(APPEND CMAKE_MODULE_PATH
 include(Utilities)
 
 find_compiler(
-  GNU   4.7  "-std=c++11 -Wall"
-  Clang 3.2  "-std=c++11 -Wall"
+  GNU   4.7  "-std=c++11 -Wall -Wextra"
+  Clang 3.2  "-std=c++11 -Wall -Wextra"
   MSVC  2013 "/W4"
 )
 
@@ -51,6 +51,7 @@ set(SRC_LIST
 set(HEADER_LIST
   include/clany/clany_defs.h
   include/clany/utilities.h
+  include/clany/algorithm.hpp
   include/clany/timer.hpp
   include/clany/cmdparser.hpp
   include/clany/file_operation.hpp

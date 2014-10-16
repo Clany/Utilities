@@ -55,6 +55,9 @@ void algTest()
     all_odd = none_of(arr1, [](int ele) { return ele % 2 == 0; });
     ASSERT(all_odd);
 
+    for_each({7, 5, 9, 15, 3}, [](int ele) { cout << ele << " "; });
+    cout << endl;
+
     int nine_num = count(vec1, 9);
     ASSERT(4 == nine_num);
     int divide_by_three = count_if(arr1, [](int ele) { return ele % 3 == 0; });
@@ -85,6 +88,7 @@ void algTest()
     vec_iter = search_n(vec1, 6, 7, greater<int>());
     ASSERT(4 == distance(begin(vec1), vec_iter));
 
+    copy({1, 2, 3}, vec2);
     copy(arr1, vec2);
     ASSERT(equal(arr1, vec2));
     copy_if(vec1, vec2, [](int ele) { return ele >= 13; });
@@ -117,21 +121,22 @@ void algTest()
     transform(arr1, vec3, [](int ele) { return ele + 0.3; });
     DBGVAR(cout, inner_product(vec1, vec3));
 
-    auto inprod = inner_product(vec1, vec3, 0.f,
-                                [](int ele1, float ele2) { return ele1 + ele2; },
-                                [](int ele1, float ele2) { return ele1 / ele2; });
+    auto inprod = inner_product(vec1, vec3,
+                                [](float ele1, float ele2) { return ele1 + ele2; },
+                                [](int   ele1, float ele2) { return ele1 / ele2; });
     DBGVAR(cout, inprod);
 
     swap(vec1[3], vec1[5]);
     partial_sort(vec1, 3);
     ASSERT(4 == distance(vec1.begin(), is_sorted_until(vec1)));
+    sort(vec1, greater<int>());
 
     auto minmax_val = minmax_element(arr1);
     DBGVAR(cout, *minmax_val.first);
     DBGVAR(cout, *minmax_val.second);
 }
 
-int main(int argc, char* argv[])
+int main(/*int argc, char* argv[]*/)
 {
     algTest();
 
