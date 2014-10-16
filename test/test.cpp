@@ -4,7 +4,7 @@
 #include <clany/dyn_bitset.hpp>
 
 using namespace std;
-using namespace clany;
+using namespace cls;
 
 _CLANY_BEGIN
 struct Shape {
@@ -46,8 +46,95 @@ struct CmdArgs {
     string load_file = "";
 };
 
+void algTest()
+{
+    vector<int> vec1 {9, 3, 5, 7, 9, 13, 9, 17, 17, 9};
+    int arr1[] = {9, 3, 5, 7, 3, 11, 9, 1, 13, 9};
+    bool all_odd = all_of(vec1, [](int ele) { return ele % 2 == 1; });
+    ASSERT(all_odd);
+    all_odd = none_of(arr1, [](int ele) { return ele % 2 == 0; });
+    ASSERT(all_odd);
+
+    int nine_num = count(vec1, 9);
+    ASSERT(4 == nine_num);
+    int divide_by_three = count_if(arr1, [](int ele) { return ele % 3 == 0; });
+    ASSERT(5 == divide_by_three);
+
+    auto non_eq = mismatch(vec1, arr1, less_equal<int>());
+    DBGVAR(cout, *non_eq.first);
+    DBGVAR(cout, *non_eq.second);
+
+    auto vec2 = vec1;
+    ASSERT(equal(vec1, vec2));
+    ASSERT(equal(vec1, arr1, greater_equal<int>()));
+
+    auto iter = find(arr1, 11);
+    ASSERT(iter != end(arr1));
+    iter = find_if(arr1, [](int ele) { return ele > 9; });
+    DBGVAR(cout, *iter);
+    auto vec_iter = find_first_of(vec1, {11, 15, 17}, greater<int>());
+    ASSERT(5 == distance(begin(vec1), vec_iter));
+
+    vec_iter = adjacent_find(vec1);
+    ASSERT(7 == distance(begin(vec1), vec_iter));
+    iter = adjacent_find(arr1, [](int ele1, int ele2) { return (ele2 - ele1) == 8; });
+    ASSERT(4 == distance(begin(arr1), iter));
+
+    iter = search(arr1, {11, 9, 1});
+    ASSERT(5 == distance(begin(arr1), iter));
+    vec_iter = search_n(vec1, 6, 7, greater<int>());
+    ASSERT(4 == distance(begin(vec1), vec_iter));
+
+    copy(arr1, vec2);
+    ASSERT(equal(arr1, vec2));
+    copy_if(vec1, vec2, [](int ele) { return ele >= 13; });
+    ASSERT(vec2.begin() == search(vec2, {13, 17, 17}));
+    copy_backward({13, 15, 15}, vec2);
+    ASSERT(3 == distance(search(vec2, {13, 15, 15}), end(vec2)));
+
+    move(arr1, vec2);
+    move_backward({13, 15, 15}, vec2);
+
+    fill(arr1, -1);
+    ASSERT(all_of(arr1, [](int ele) { return ele == -1; }));
+
+    transform(vec2, arr1, negate<int>());
+    ASSERT(equal(vec2, arr1, [](int ele1, int ele2) {
+        return abs(ele1) == abs(ele2);
+    }));
+
+    const uint SEED = random_device()();
+    auto  rd_engine = default_random_engine(SEED);
+    generate(arr1, rd_engine);
+    rotate_copy(vec2, 3, arr1);
+
+    DBGVAR(cout, accumulate(vec1) + 0.1f);
+    DBGVAR(cout, accumulate(arr1, 1, [](int ele, int init) {
+        return ele*init;
+    }));
+
+    vector<float> vec3(vec1.size());
+    transform(arr1, vec3, [](int ele) { return ele + 0.3; });
+    DBGVAR(cout, inner_product(vec1, vec3));
+
+    auto inprod = inner_product(vec1, vec3, 0.f,
+                                [](int ele1, float ele2) { return ele1 + ele2; },
+                                [](int ele1, float ele2) { return ele1 / ele2; });
+    DBGVAR(cout, inprod);
+
+    swap(vec1[3], vec1[5]);
+    partial_sort(vec1, 3);
+    ASSERT(4 == distance(vec1.begin(), is_sorted_until(vec1)));
+
+    auto minmax_val = minmax_element(arr1);
+    DBGVAR(cout, *minmax_val.first);
+    DBGVAR(cout, *minmax_val.second);
+}
+
 int main(int argc, char* argv[])
 {
+    algTest();
+
     CPUTimer timer;
 
     BitField bit_field(13, "0110111010111");

@@ -42,25 +42,67 @@ struct is_container<T, typename enable_if<!is_same<typename remove_reference<T>:
 {};
 
 template<typename T, size_t N>
+struct is_container<T(&)[N], void> : true_type
+{};
+
+template<typename T, size_t N>
 struct is_container<T[N], void> : true_type
 {};
 
-// Print container elements
-template<typename Container>
-inline typename enable_if<clany::is_container<Container>::value, ostream&>::type
-operator<<(ostream& os, Container&& container)
-{
-    auto b_iter = begin(container);
-    auto l_iter = end(container);
-    os << *b_iter++;
-    while (b_iter != l_iter) {
-        os << ", " << *b_iter;
-        ++b_iter;
-    }
-    os << endl;
-    return os;
-}
+template <typename Container, bool = is_container<Container>::value>
+struct ContainerTraits
+{};
 
+template <typename Container>
+struct ContainerTraits<Container, true>
+{
+    using iterator   = typename remove_reference<Container>::type::iterator;
+    using value_type = typename iterator_traits<iterator>::value_type;
+    using reference  = typename iterator_traits<iterator>::reference;
+    using pointer    = typename iterator_traits<iterator>::pointer;
+};
+
+template <typename T, size_t N>
+struct ContainerTraits<T[N], true>
+{
+    using iterator   = T*;
+    using value_type = T;
+    using reference  = T&;
+    using pointer    = T*;
+};
+
+template <typename T, size_t N>
+struct ContainerTraits<T(&)[N], true>
+{
+    using iterator   = T*;
+    using value_type = T;
+    using reference  = T&;
+    using pointer    = T*;
+};
+
+template <typename Container>
+struct container_value
+{
+    using type = typename ContainerTraits<Container>::value_type;
+};
+
+template <typename Container>
+struct container_reference
+{
+    using type = typename ContainerTraits<Container>::reference;
+};
+
+template <typename Container>
+struct container_pointer
+{
+    using type = typename ContainerTraits<Container>::pointer;
+};
+
+template <typename Container>
+struct container_iterator
+{
+    using type = typename ContainerTraits<Container>::pointer;
+};
 //////////////////////////////////////////////////////////////////////////////////////////
 // Iterator traits
 template<typename T, typename = void>
