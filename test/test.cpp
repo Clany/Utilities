@@ -1,6 +1,7 @@
 #include <forward_list>
 #include <random>
 #include <clany/utilities.h>
+#include <clany/algorithm.hpp>
 #include <clany/dyn_bitset.hpp>
 
 using namespace std;
