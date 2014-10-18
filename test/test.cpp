@@ -257,8 +257,8 @@ int main(/*int argc, char* argv[]*/)
 //     static_assert(is_const_iterator<const int>::value, "const int is not a const iterator");
 //     static_assert(is_const_iterator<const Shape*>::value, "const Shape* is not a const iterator");
 //     static_assert(is_const_iterator<vector<int>::iterator>::value, "vector<int>::iterator is not a const iterator");
-//     static_assert(is_const_iterator<vector<int>::const_iterator>::value, "vector<int>::iterator is not a const iterator");
-//     static_assert(is_input_iterator<vector<int>::iterator>::value, "vector<int>::iterator is not an input iterator");
+//     static_assert(is_const_iterator<vector<int>::const_iterator>::value, "vector<int>::const_iterator is not a const iterator");
+//     static_assert(is_input_iterator<vector<int>::iterator&>::value, "vector<int>::iterator is not an input iterator");
 //     static_assert(is_input_iterator<ostream_iterator<int>>::value, "ostream_iterator<int> is not an input iterator");
 //     static_assert(is_output_iterator<ostream_iterator<int>>::value, "ostream_iterator<int> is not an output iterator");
 //     static_assert(is_output_iterator<istream_iterator<int>>::value, "istream_iterator<int> is not an output iterator");
