@@ -49,6 +49,8 @@ struct CmdArgs {
 
 void algTest()
 {
+    ScopeTimer scp_timer;
+
     vector<int> vec1 {9, 3, 5, 7, 9, 13, 9, 17, 17, 9};
     int arr1[] = {9, 3, 5, 7, 3, 11, 9, 1, 13, 9};
     bool all_odd = all_of(vec1, [](int ele) { return ele % 2 == 1; });
@@ -139,9 +141,11 @@ void algTest()
 
 int main(/*int argc, char* argv[]*/)
 {
+    CPUTimer timer;
+
     algTest();
 
-    CPUTimer timer;
+    timer.delta();
 
     BitField bit_field(13, "0110111010111");
     cout << bit_field << endl;
@@ -245,7 +249,6 @@ int main(/*int argc, char* argv[]*/)
     if (!shape) cerr << "could not find type Square" << endl;
 
     timer.elapsed();
-    timer.pause();
 
     // Iterator type traits
 //     static_assert(is_iterator<Shape>::value, "Shape is not an iterator");

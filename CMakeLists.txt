@@ -20,28 +20,28 @@ endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
-#find_package(Boost REQUIRED COMPONENTS filesystem thread)
-find_package(Boost REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
+# find_package(Boost REQUIRED COMPONENTS filesystem thread)
+# find_package(Boost REQUIRED)
+# include_directories(${Boost_INCLUDE_DIRS})
 # target_link_libraries(<target> ${Boost_LIBRARIES})
-
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+# 
+# find_package(OpenCV REQUIRED)
+# include_directories(${OpenCV_INCLUDE_DIRS})
 # target_link_libraries(<target> ${OpenCV_LIBS})
-
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
-
-find_package(FFTW REQUIRED)
-include_directories(${FFTW_INCLUDES})
+# 
+# find_package(Eigen3 REQUIRED)
+# include_directories(${EIGEN3_INCLUDE_DIR})
+# 
+# find_package(FFTW REQUIRED)
+# include_directories(${FFTW_INCLUDES})
 # target_link_libraries(<target> ${FFTW_LIBRARIES})
-
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
+# 
+# find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
 # target_link_libraries(<target> Qt5::Core Qt5::Gui Qt5::Widgets)
-
-find_package(TBB REQUIRED)
-include_directories(${TBB_INCLUDE_DIRS})
-# link_directories(<target> ${TBB_LIBRARY_DIRS}) MSVC issue: could not find tbb_debug.lib
+# 
+# find_package(TBB REQUIRED)
+# include_directories(${TBB_INCLUDE_DIRS})
+# link_directories(${TBB_LIBRARY_DIRS}) # MSVC issue: could not find tbb_debug.lib
 # target_link_libraries(<target> ${TBB_LIBRARIES})
 
 set(SRC_LIST
@@ -65,4 +65,4 @@ set(HEADER_LIST
 )
 
 add_executable(utilities ${SRC_LIST} ${HEADER_LIST})
-#target_link_libraries(utilities)
+# target_link_libraries(utilities)
