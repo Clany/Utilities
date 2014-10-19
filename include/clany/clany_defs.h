@@ -22,11 +22,13 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_MACROS_H
-#define CLANY_MACROS_H
+#ifndef CLS_CLANY_DEFS_H
+#define CLS_CLANY_DEFS_H
 
-#define _CLANY_BEGIN	namespace cls {
-#define _CLANY_END		}
+#define _CLANY_BEGIN    namespace cls {
+#define _CLANY_END      }
+#define _CLS_BEGIN      namespace cls {
+#define _CLS_END        }
 
 #if defined CLANYAPI_EXPORTS
 #  define CLANY_EXPORTS __declspec(dllexport)
@@ -101,8 +103,8 @@ using ullong = unsigned long long;
 using llong  = long long;
 
 // Define GCC and Clang Version
-#define GCC_VERSION (__GNUC__ * 100 +\
-                     __GNUC_MINOR__)
+#define GCC_VERSION   (__GNUC__ * 100 +\
+                       __GNUC_MINOR__)
 #define CLANG_VERSION (__clang_major__ * 100 +\
                        __clang_minor__)
 #define CPP11_SUPPORT (GCC_VERSION >= 408 || CLANG_VERSION >= 303 || _MSC_VER >= 1900)
@@ -112,4 +114,4 @@ _CLANY_BEGIN
 using namespace std;
 _CLANY_END
 
-#endif // CLANY_MACROS_H
+#endif // CLS_CLANY_DEFS_H

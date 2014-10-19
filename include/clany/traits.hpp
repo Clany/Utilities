@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_TRAITS_HPP
-#define CLANY_TRAITS_HPP
+#ifndef CLS_TRAITS_HPP
+#define CLS_TRAITS_HPP
 
 #include <iterator>
 #include <type_traits>
@@ -242,4 +242,4 @@ struct is_random_access_iterator<T, true>
 {};
 _CLANY_END
 
-#endif // CLANY_TRAITS_HPP
+#endif // CLS_TRAITS_HPP

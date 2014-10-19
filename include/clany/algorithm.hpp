@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef ALGORITHM_HPP
-#define ALGORITHM_HPP
+#ifndef CLS_ALGORITHM_HPP
+#define CLS_ALGORITHM_HPP
 
 #include <algorithm>
 #include <numeric>
@@ -641,4 +641,4 @@ inline T inner_product(Container1&& container1, Container2&& container2,
 }
 } // End of namespace std
 
-#endif // ALGORITHM_HPP
+#endif // CLS_ALGORITHM_HPP

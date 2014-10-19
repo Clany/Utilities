@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef BYTE_ARRAY_HPP
-#define BYTE_ARRAY_HPP
+#ifndef CLS_BYTE_ARRAY_HPP
+#define CLS_BYTE_ARRAY_HPP
 
 #include <cstring>
 #include <vector>
@@ -39,6 +39,8 @@ public:
     using Base = vector<char>;
 
     ByteArray() = default;
+    ByteArray(const Base& data) : Base(data) {}
+    ByteArray(Base&& data) : Base(move(data)) {}
 #if CPP11_SUPPORT
     using Base::Base;
 #else
@@ -126,4 +128,4 @@ _CLANY_END
 
 
 
-#endif // BYTE_ARRAY_HPP
+#endif // CLS_BYTE_ARRAY_HPP

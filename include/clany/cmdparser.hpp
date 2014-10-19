@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_CMDPARSER_HPP
-#define CLANY_CMDPARSER_HPP
+#ifndef CLS_CMDPARSER_HPP
+#define CLS_CMDPARSER_HPP
 
 #include <vector>
 #include <map>
@@ -241,4 +241,4 @@ inline string CmdLineParser::parse<string>(const string& name) {
 
 _CLANY_END
 
-#endif // CLANY_CMDPARSER_HPP
+#endif // CLS_CMDPARSER_HPP

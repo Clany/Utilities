@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_FILE_HANDLE_HPP
-#define CLANY_FILE_HANDLE_HPP
+#ifndef CLS_FILE_HANDLE_HPP
+#define CLS_FILE_HANDLE_HPP
 
 #include <vector>
 #include <fstream>
@@ -118,4 +118,4 @@ inline int countLine(const string& file_name)
 }
 _CLANY_END
 
-#endif // CLANY_FILE_HANDLE_HPP
+#endif // CLS_FILE_HANDLE_HPP

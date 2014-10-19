@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_UTILITIES_H
-#define CLANY_UTILITIES_H
+#ifndef CLS_UTILITIES_H
+#define CLS_UTILITIES_H
 
 #include "clany_defs.h"
 #include "cmdparser.hpp"
@@ -32,4 +32,4 @@
 #include "factory.hpp"
 #include "traits.hpp"
 
-#endif // CLANY_UTILITIES_H
+#endif // CLS_UTILITIES_H

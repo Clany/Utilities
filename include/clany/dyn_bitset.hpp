@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef DYN_BITSET_HPP
-#define DYN_BITSET_HPP
+#ifndef CLS_DYN_BITSET_HPP
+#define CLS_DYN_BITSET_HPP
 
 #include <vector>
 #include <bitset>
@@ -222,4 +222,4 @@ inline bool operator!=(const DynBitset& left, const DynBitset& right)
 }
 _CLANY_END
 
-#endif // DYN_BITSET_HPP
+#endif // CLS_DYN_BITSET_HPP

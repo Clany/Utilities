@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_POINT_TYPES_HPP
-#define CLANY_POINT_TYPES_HPP
+#ifndef CLS_POINT_TYPES_HPP
+#define CLS_POINT_TYPES_HPP
 
 #include <vector>
 #include <iterator>
@@ -32,7 +32,7 @@
 #include "clany_defs.h"
 
 _CLANY_BEGIN
-#define  CLANY_ADD_RGB \
+#define CLS_ADD_RGB \
 union \
 { \
     struct \
@@ -45,7 +45,7 @@ union \
 }; \
 
 
-#define CLANY_ADD_POINT3D \
+#define CLS_ADD_POINT3D \
 union \
 { \
     T data[3]; \
@@ -58,7 +58,7 @@ union \
 }; \
 
 
-#define CLANY_ADD_NORMAL3D \
+#define CLS_ADD_NORMAL3D \
 union \
 { \
     T data_n[3]; \
@@ -74,7 +74,7 @@ union \
 
 struct PixelRGB
 {
-    CLANY_ADD_RGB;
+    CLS_ADD_RGB;
 
     PixelRGB() : b(0), g(0), r(0) {}
 
@@ -85,7 +85,7 @@ struct PixelRGB
 template<typename T>
 struct Point3D
 {
-    CLANY_ADD_POINT3D;
+    CLS_ADD_POINT3D;
 
     Point3D() : x(0), y(0), z(0) {}
 
@@ -98,7 +98,7 @@ using Point3d = Point3D<double>;
 template<typename T>
 struct Normal
 {
-    CLANY_ADD_NORMAL3D;
+    CLS_ADD_NORMAL3D;
 
     Normal() : normal_x(0), normal_y(0), normal_z(0) {}
 
@@ -111,8 +111,8 @@ using Normal3d = Normal<double>;
 template<typename T>
 struct PointNormal
 {
-    CLANY_ADD_POINT3D;
-    CLANY_ADD_NORMAL3D;
+    CLS_ADD_POINT3D;
+    CLS_ADD_NORMAL3D;
 
     PointNormal() : x(0), y(0), z(0), normal_x(0), normal_y(0), normal_z(0) {}
 
@@ -126,8 +126,8 @@ using Point3dNormal = PointNormal<double>;
 template<typename T>
 struct PointRGB
 {
-    CLANY_ADD_POINT3D;
-    CLANY_ADD_RGB;
+    CLS_ADD_POINT3D;
+    CLS_ADD_RGB;
 
     inline PointRGB() : x(0), y(0), z(0), b(0), g(0), r(0) {}
 
@@ -245,4 +245,4 @@ public:
 };
 _CLANY_END
 
-#endif // CLANY_POINT_TYPES_HPP
+#endif // CLS_POINT_TYPES_HPP

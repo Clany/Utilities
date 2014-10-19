@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_FACTORY_HPP
-#define CLANY_FACTORY_HPP
+#ifndef CLS_FACTORY_HPP
+#define CLS_FACTORY_HPP
 
 #include <map>
 #include <memory>
@@ -121,4 +121,4 @@ namespace { \
     const bool ADD_##DerivedType = clany::ObjFactory<BaseType, string, Creator>::addType(#DerivedType, clany::Factory<DerivedType>()); \
 }
 
-#endif // CLANY_FACTORY_HPP
+#endif // CLS_FACTORY_HPP

@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLANY_EIGEN_HPP
-#define CLANY_EIGEN_HPP
+#ifndef CLS_EIGEN_HPP
+#define CLS_EIGEN_HPP
 
 #include <iostream>
 #include "Eigen/Dense"
@@ -212,4 +212,4 @@ inline void SVDSolve(const Matrix<T, M, N, 0, M, N>& A,
 }
 #endif
 }
-#endif // CLANY_EIGEN_HPP
+#endif // CLS_EIGEN_HPP

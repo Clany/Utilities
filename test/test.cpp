@@ -41,11 +41,11 @@ struct Square final : Rect {
 _CLANY_END
 
 struct CmdArgs {
-    string name = "";
-    string address = "";
-    int    post_code = 0;
+    string name       = "";
+    string address    = "";
+    int    post_code  = 0;
     bool   need_print = false;
-    string load_file = "";
+    string load_file  = "";
 };
 
 void algTest()
