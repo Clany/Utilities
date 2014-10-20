@@ -57,7 +57,6 @@ set(HEADER_LIST
   include/clany/file_operation.hpp
   include/clany/factory.hpp
   include/clany/traits.hpp
-  include/clany/tstring.h
   include/clany/eigen.hpp
   include/clany/point_types.hpp
   include/clany/byte_array.hpp

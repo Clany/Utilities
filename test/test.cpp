@@ -92,21 +92,22 @@ void algTest()
     vec_iter = search_n(vec1, 6, 7, greater<int>());
     ASSERT(4 == distance(begin(vec1), vec_iter));
 
-    copy({1, 2, 3}, vec2);
+    copy({1, 2, 3}, vec2.begin());
     copy(arr1, vec2);
     ASSERT(equal(arr1, vec2));
     copy_if(vec1, vec2, [](int ele) { return ele >= 13; });
-    ASSERT(vec2.begin() == search(vec2, {13, 17, 17}));
-    copy_backward({13, 15, 15}, vec2);
+    ASSERT(equal({13, 17, 17}, vec2));
+    vec2 = {5, 7, 3, 11, 9, 1, 13};
+    copy_backward({13, 15, 15}, vec2.end());
     ASSERT(3 == distance(search(vec2, {13, 15, 15}), end(vec2)));
 
-    move(arr1, vec2);
-    move_backward({13, 15, 15}, vec2);
+    move_backward(vec2, end(arr1));
 
     fill(arr1, -1);
     ASSERT(all_of(arr1, [](int ele) { return ele == -1; }));
 
-    transform(vec2, arr1, negate<int>());
+    transform(vec2, begin(arr1), negate<int>());
+    transform({1, 3, 5}, vec1, negate<int>());
     ASSERT(equal(vec2, arr1, [](int ele1, int ele2) {
         return abs(ele1) == abs(ele2);
     }));
@@ -114,7 +115,8 @@ void algTest()
     const uint SEED = random_device()();
     auto  rd_engine = default_random_engine(SEED);
     generate(arr1, rd_engine);
-    rotate_copy(vec2, 3, arr1);
+    remove_copy_if(arr1, vec1, [](int ele) { return ele % 2 != 0; });
+    rotate_copy(vec2, 3, begin(arr1));
 
     DBGVAR(cout, accumulate(vec1) + 0.1f);
     DBGVAR(cout, accumulate(arr1, 1, [](int ele, int init) {

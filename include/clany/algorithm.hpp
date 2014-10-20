@@ -32,6 +32,19 @@
 
 namespace std {
 //////////////////////////////////////////////////////////////////////////////////////////
+template<typename Container,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+auto container_size(Container&& container) -> decltype(container.size())
+{
+    return container.size();
+}
+
+template<typename T, size_t N>
+size_t container_size(T(&)[N])
+{
+    return N;
+}
+
 // Non-modifying sequence operations
 template<typename Container, typename Func,
          typename U = typename enable_if<cls::is_container<Container>::value>::type>
@@ -86,7 +99,7 @@ typename iterator_traits<decltype(begin(container))>::difference_type
 
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline auto mismatch(Container1& container1, Container2& container2) ->
 pair<decltype(begin(container1)), decltype(begin(container2))>
 {
@@ -95,7 +108,7 @@ pair<decltype(begin(container1)), decltype(begin(container2))>
 
 template<typename Container1, typename Container2, typename BPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline auto mismatch(Container1& container1, Container2& container2, BPred p) ->
 pair<decltype(begin(container1)), decltype(begin(container2))>
 {
@@ -104,7 +117,7 @@ pair<decltype(begin(container1)), decltype(begin(container2))>
 
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline bool equal(Container1&& container1, Container2&& container2)
 {
     return equal(begin(container1), end(container1),begin(container2));
@@ -112,8 +125,37 @@ inline bool equal(Container1&& container1, Container2&& container2)
 
 template<typename Container1, typename Container2, typename BPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline bool equal(Container1&& container1, Container2&& container2, BPred p)
+{
+    return equal(begin(container1), end(container1), begin(container2), p);
+}
+
+// Initializer list overload
+template<typename T, typename Container,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline bool equal(Container&& container1, initializer_list<T>&& container2)
+{
+    return equal(begin(container1), end(container1),begin(container2));
+}
+
+template<typename T, typename Container,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline bool equal(initializer_list<T>&& container1, Container&& container2)
+{
+    return equal(begin(container1), end(container1),begin(container2));
+}
+
+template<typename T, typename Container, typename BPred,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline bool equal(Container&& container1, initializer_list<T>&& container2, BPred p)
+{
+    return equal(begin(container1), end(container1), begin(container2), p);
+}
+
+template<typename T, typename Container, typename BPred,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline bool equal(initializer_list<T>&& container1, Container&& container2, BPred p)
 {
     return equal(begin(container1), end(container1), begin(container2), p);
 }
@@ -142,7 +184,46 @@ decltype(begin(container))
 
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
+inline auto find_end(Container1& container1, Container2&& container2) ->
+decltype(begin(container1))
+{
+    return find_end(begin(container1), end(container1),
+                    begin(container2), end(container2));
+}
+
+template<typename Container1, typename Container2, typename BPred,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline auto find_end(Container1& container1, Container2&& container2, BPred p) ->
+decltype(begin(container1))
+{
+    return find_end(begin(container1), end(container1),
+                    begin(container2), end(container2), p);
+}
+
+// Initializer list overload
+template<typename T, typename Container,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline auto find_end(Container& container1, initializer_list<T>&& container2) ->
+decltype(begin(container1))
+{
+    return find_end(begin(container1), end(container1),
+                    begin(container2), end(container2));
+}
+
+template<typename T, typename Container, typename BPred,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline auto find_end(Container& container1, initializer_list<T>&& container2, BPred p) ->
+decltype(begin(container1))
+{
+    return find_end(begin(container1), end(container1),
+                    begin(container2), end(container2), p);
+}
+
+template<typename Container1, typename Container2,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
 inline auto find_first_of(Container1& container1, Container2&& container2) ->
 decltype(begin(container1))
 {
@@ -152,7 +233,7 @@ decltype(begin(container1))
 
 template<typename Container1, typename Container2, typename BPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline auto find_first_of(Container1& container1, Container2&& container2, BPred p) ->
 decltype(begin(container1))
 {
@@ -195,7 +276,7 @@ inline auto adjacent_find(Container& container, BPred p) -> decltype(begin(conta
 
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline auto search(Container1& container1, Container2&& container2) ->
 decltype(begin(container1))
 {
@@ -205,7 +286,7 @@ decltype(begin(container1))
 
 template<typename Container1, typename Container2, typename BPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
+         cls::is_container<Container2>::value>::type>
 inline auto search(Container1& container1, Container2&& container2, BPred p) ->
 decltype(begin(container1))
 {
@@ -249,94 +330,96 @@ decltype(begin(container))
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 // Modifying sequence operations
+// Container to container, automatically resize
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto copy(Container1&& container1, Container2& container2) ->
-decltype(begin(container2))
+         cls::is_container<Container2>::value>::type>
+inline void copy(Container1&& container1, Container2& container2)
 {
-    return copy(begin(container1), end(container1), begin(container2));
+    container2.resize(container_size(container1));
+    copy(begin(container1), end(container1), begin(container2));
 }
 
-// Initializer list overload
-template<typename T, typename Container,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto copy(initializer_list<T>&& container1, Container& container2) ->
-decltype(begin(container2))
+// Container to output iterator
+template<typename Container, typename OutputIt,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto copy(Container&& container, OutputIt d_first) -> OutputIt
 {
-    return copy(begin(container1), end(container1), begin(container2));
+    return copy(begin(container), end(container1), d_first);
 }
 
+// Initializer list to output iterator
+template<typename T, typename OutputIt,
+         typename U = typename enable_if<cls::is_output_iterator<OutputIt>::value>::type>
+inline auto copy(initializer_list<T>&& container, OutputIt d_first) -> OutputIt
+{
+    return copy(begin(container), end(container), d_first);
+}
+
+// Container to container, automatically resize
 template<typename Container1, typename Container2, typename UPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto copy_if(Container1&& container1, Container2& container2, UPred p) ->
-decltype(begin(container2))
+         cls::is_container<Container2>::value>::type>
+inline void copy_if(Container1&& container1, Container2& container2, UPred p)
 {
-    return copy_if(begin(container1), end(container1), begin(container2), p);
+    container2.resize(container_size(container1));
+    auto iter = copy_if(begin(container1), end(container1), begin(container2), p);
+    container2.resize(distance(begin(container2), iter));
 }
 
-// Initializer list overload
-template<typename T, typename Container, typename UPred,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto copy_if(initializer_list<T>&& container1, Container& container2, UPred p) ->
-decltype(begin(container2))
+// Container to output iterator
+template<typename Container, typename OutputIt, typename UPred,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto copy_if(Container&& container, OutputIt d_first, UPred p) -> OutputIt
 {
-    return copy_if(begin(container1), end(container1), begin(container2), p);
+    return copy_if(begin(container), end(container), d_first, p);
 }
 
+// Container to output iterator
+template<typename Container, typename OutputIt,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto copy_backward(Container&& container, OutputIt d_first) -> OutputIt
+{
+    return copy_backward(begin(container), end(container), d_first);
+}
+
+// Initializer list to output iterator
+template<typename T, typename OutputIt,
+         typename U = typename enable_if<cls::is_output_iterator<OutputIt>::value>::type>
+inline auto copy_backward(initializer_list<T>&& container, OutputIt d_first) -> OutputIt
+{
+    return copy_backward(begin(container), end(container), d_first);
+}
+
+// Container to container, automatically resize
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto copy_backward(Container1&& container1, Container2& container2) ->
-decltype(begin(container2))
+         cls::is_container<Container2>::value>::type>
+inline void move(Container1&& container1, Container2& container2)
 {
-    return copy_backward(begin(container1), end(container1), end(container2));
+    container2.resize(container_size(container1));
+    move(begin(container1), end(container1), begin(container2));
 }
 
-// Initializer list overload
-template<typename T, typename Container,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto copy_backward(initializer_list<T>&& container1, Container& container2) ->
-decltype(begin(container2))
+// Container to output iterator
+template<typename Container, typename OutputIt,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto move(Container&& container, OutputIt d_first) -> OutputIt
 {
-    return copy_backward(begin(container1), end(container1), end(container2));
+    return move(begin(container), end(container1), d_first);
 }
 
-template<typename Container1, typename Container2,
-         typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto move(Container1&& container1, Container2& container2) ->
-decltype(begin(container2))
+// Container to output iterator
+template<typename Container, typename OutputIt,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto move_backward(Container&& container, OutputIt d_first) -> OutputIt
 {
-    return move(begin(container1), end(container1), begin(container2));
-}
-
-// Initializer list overload
-template<typename T, typename Container,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto move(initializer_list<T>&& container1, Container& container2) ->
-decltype(begin(container2))
-{
-    return move(begin(container1), end(container1), begin(container2));
-}
-
-template<typename Container1, typename Container2,
-         typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto move_backward(Container1&& container1, Container2& container2) ->
-decltype(begin(container2))
-{
-    return move_backward(begin(container1), end(container1), end(container2));
-}
-
-// Initializer list overload
-template<typename T, typename Container,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto move_backward(initializer_list<T>&& container1, Container& container2) ->
-decltype(begin(container2))
-{
-    return move_backward(begin(container1), end(container1), end(container2));
+    return move_backward(begin(container), end(container), d_first);
 }
 
 template<typename Container, typename T,
@@ -346,25 +429,53 @@ inline void fill(Container& container, const T& value)
     fill(begin(container), end(container), value);
 }
 
+// Container to container, automatically resize
 template<typename Container1, typename Container2, typename UPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto transform(Container1&& container1, Container2& container2, UPred p) ->
-decltype(begin(container2))
+         cls::is_container<Container2>::value>::type>
+inline void transform(Container1&& container1, Container2& container2, UPred p)
 {
-    return transform(begin(container1), end(container1), begin(container2), p);
+    container2.resize(container_size(container1));
+    transform(begin(container1), end(container1), begin(container2), p);
 }
 
-template<typename Container1, typename Container2, typename Container3, typename UPred,
+// Container to output iterator
+template<typename Container, typename OutputIt, typename UPred,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto transform(Container&& container, OutputIt d_first, UPred p) -> OutputIt
+{
+    return transform(begin(container), end(container), d_first, p);
+}
+
+// Two containers to output iterator
+template<typename Container1, typename Container2, typename OutputIt, typename UPred,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value &&
-                                         cls::is_container<Container3>::value>::type>
+         cls::is_container<Container2>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
 inline auto transform(Container1&& container1, Container2&& container2,
-                      Container3& container3, UPred p) ->
-decltype(begin(container2))
+                      OutputIt d_first, UPred p) -> OutputIt
 {
     return transform(begin(container1), end(container1), begin(container2),
-                     begin(container3), p);
+                     d_first, p);
+}
+
+// Initializer list to container, automatically resize
+template<typename T, typename Container, typename UPred,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void transform(initializer_list<T>&& container1, Container& container2, UPred p)
+{
+    container2.resize(container_size(container1));
+    transform(begin(container1), end(container1), begin(container2), p);
+}
+
+// Initializer list to output iterator
+template<typename T, typename OutputIt, typename UPred,
+         typename U = typename enable_if<cls::is_output_iterator<OutputIt>::value>::type>
+inline auto transform(initializer_list<T>&& container, OutputIt d_first,
+                      UPred p) -> OutputIt
+{
+    return transform(begin(container), end(container), d_first, p);
 }
 
 template<typename Container, typename Generator,
@@ -374,6 +485,107 @@ inline void generate(Container& container, Generator&& g)
     generate(begin(container), end(container), forward<Generator>(g));
 }
 
+// Automatically resize after removal
+template<typename Container, typename T,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void remove(Container& container, const T& value)
+{
+    auto iter = remove(begin(container), end(container), value);
+    container.resize(distance(begin(container), iter));
+}
+
+// Automatically resize after removal
+template<typename Container, typename UPred,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void remove_if(Container& container, UPred p)
+{
+    auto iter = remove_if(begin(container), end(container), p);
+    container.resize(distance(begin(container), iter));
+}
+
+// Container to container, automatically resize
+template<typename Container1, typename Container2, typename T,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline void remove_copy(Container1&& container1, Container2& container2, const T& value)
+{
+    container2.resize(container_size(container1));
+    auto iter = remove_copy(begin(container1), end(container1), begin(container2), value);
+    container2.resize(distance(begin(container2), iter));
+}
+
+template<typename Container1, typename Container2, typename UPred,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline void remove_copy_if(Container1&& container1, Container2& container2, UPred p)
+{
+    container2.resize(container_size(container1));
+    auto iter = remove_copy_if(begin(container1), end(container1), begin(container2), p);
+    container2.resize(distance(begin(container2), iter));
+}
+
+template<typename Container, typename T,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void replace(Container& container, const T& old_value, const T& new_value)
+{
+    replace(begin(container), end(container), old_value, new_value);
+}
+
+template<typename Container, typename UPred, typename T,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void replace_if(Container& container, UPred p, const T& new_value)
+{
+    replace_if(begin(container), end(container), p, new_value);
+}
+
+// Container to container, automatically resize
+template<typename Container1, typename Container2, typename T,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline void replace_copy(Container1&& container1, Container2& container2,
+                         const T& old_value, const T& new_value)
+{
+    container2.resize(container_size(container1));
+    auto iter = replace_copy(begin(container1), end(container1),
+                             begin(container2), old_value, new_value);
+    container2.resize(distance(begin(container2), iter));
+}
+
+// Container to output iterator
+template<typename Container, typename OutputIt, typename T,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto replace_copy(Container&& container, OutputIt d_first,
+                         const T& old_value, const T& new_value) -> OutputIt
+{
+    return replace_copy(begin(container), end(container),
+                        d_first, old_value, new_value);
+}
+
+// Container to container, automatically resize
+template<typename Container1, typename Container2, typename UPred, typename T,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline void replace_copy_if(Container1&& container1, Container2& container2,
+                            UPred p, const T& new_value)
+{
+    container2.resize(container_size(container1));
+    auto iter = replace_copy_if(begin(container1), end(container1),
+                                begin(container2), p, new_value);
+    container2.resize(distance(begin(container2), iter));
+}
+
+// Container to output iterator
+template<typename Container, typename OutputIt, typename UPred, typename T,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto replace_copy_if(Container&& container, OutputIt d_first,
+                            UPred p, const T& new_value) -> OutputIt
+{
+    return replace_copy_if(begin(container), end(container),
+                           d_first, p, new_value);
+}
+
 template<typename Container,
          typename U = typename enable_if<cls::is_container<Container>::value>::type>
 inline void reverse(Container& container)
@@ -381,13 +593,23 @@ inline void reverse(Container& container)
     reverse(begin(container), end(container));
 }
 
+// Container to container, automatically resize
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto reverse_copy(Container1&& container1, Container2& container2) ->
-decltype(begin(container2))
+         cls::is_container<Container2>::value>::type>
+inline void reverse_copy(Container1&& container1, Container2& container2)
 {
-    return reverse_copy(begin(container1), end(container1), begin(container2));
+    container2.resize(container_size(container1));
+    reverse_copy(begin(container1), end(container1), begin(container2));
+}
+
+// Container to output iterator
+template<typename Container, typename OutputIt,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto reverse_copy(Container&& container, OutputIt d_first) -> OutputIt
+{
+    return reverse_copy(begin(container), end(container), d_first);
 }
 
 template<typename Container, typename Pos,
@@ -399,47 +621,27 @@ inline auto rotate(Container& container, Pos pos) -> decltype(begin(container))
     return rotate(begin(container), mid, end(container));
 }
 
+// Container to container, automatically resize
 template<typename Container1, typename Container2, typename Pos,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto rotate_copy(Container1&& container1, Pos pos, Container2& container2) ->
-decltype(begin(container2))
+         cls::is_container<Container2>::value>::type>
+inline void rotate_copy(Container1&& container1, Pos pos, Container2& container2)
 {
+    container2.resize(container_size(container1));
     auto mid = begin(container1);
     advance(mid, pos);
-    return rotate_copy(begin(container1), mid, end(container1), begin(container2));
+    rotate_copy(begin(container1), mid, end(container1), begin(container2));
 }
 
-template<typename Container,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto unique(Container& container) -> decltype(begin(container))
+// Container to output iterator
+template<typename Container, typename OutputIt, typename Pos,
+         typename U = typename enable_if<cls::is_container<Container>::value &&
+         cls::is_output_iterator<OutputIt>::value>::type>
+inline auto rotate_copy(Container&& container, Pos pos, OutputIt d_first) -> OutputIt
 {
-    return unique(begin(container), end(container));
-}
-
-template<typename Container, typename BPred,
-         typename U = typename enable_if<cls::is_container<Container>::value>::type>
-inline auto unique(Container& container, BPred p) -> decltype(begin(container))
-{
-    return unique(begin(container), end(container), p);
-}
-
-template<typename Container1, typename Container2,
-         typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto unique_copy(Container1&& container1, Container2& container2) ->
-decltype(begin(container2))
-{
-    return unique_copy(begin(container1), end(container1), begin(container2));
-}
-
-template<typename Container1, typename Container2, typename BPred,
-         typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type>
-inline auto unique_copy(Container1&& container1, Container2& container2, BPred p) ->
-decltype(begin(container2))
-{
-    return unique_copy(begin(container1), end(container1), begin(container2), p);
+    auto mid = begin(container);
+    advance(mid, pos);
+    return rotate_copy(begin(container), mid, end(container), d_first);
 }
 
 template<typename Container, typename URNG,
@@ -449,6 +651,45 @@ inline void shuffle(Container& container, URNG&& g)
     shuffle(begin(container), end(container), forward<URNG>(g));
 }
 
+// Automatically resize
+template<typename Container,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void unique(Container& container)
+{
+    auto iter = unique(begin(container), end(container));
+    container.resize(distance(begin(container), iter));
+}
+
+// Automatically resize
+template<typename Container, typename BPred,
+         typename U = typename enable_if<cls::is_container<Container>::value>::type>
+inline void unique(Container& container, BPred p)
+{
+    auto iter = unique(begin(container), end(container), p);
+    container.resize(distance(begin(container), iter));
+}
+
+// Container to container, automatically resize
+template<typename Container1, typename Container2,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline void unique_copy(Container1&& container1, Container2& container2)
+{
+    container2.resize(container_size(container1));
+    auto iter = unique_copy(begin(container1), end(container1), begin(container2));
+    container2.resize(distance(begin(container2), iter));
+}
+
+// Container to container, automatically resize
+template<typename Container1, typename Container2, typename BPred,
+         typename U = typename enable_if<cls::is_container<Container1>::value &&
+         cls::is_container<Container2>::value>::type>
+inline void unique_copy(Container1&& container1, Container2& container2, BPred p)
+{
+    container2.resize(container_size(container1));
+    auto iter = unique_copy(begin(container1), end(container1), begin(container2), p);
+    container2.resize(distance(begin(container2), iter));
+}
 //////////////////////////////////////////////////////////////////////////////////////////
 // Partitioning operations
 
@@ -605,7 +846,7 @@ inline T accumulate(Container&& container, T init, BOperator op)
 
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type,
+         cls::is_container<Container2>::value>::type,
          typename T = decltype(
          declval<typename cls::container_value<Container1>::type>() *
          declval<typename cls::container_value<Container2>::type>())>
@@ -618,7 +859,7 @@ inline T inner_product(Container1&& container1, Container2&& container2)
 template<typename Container1, typename Container2,
          typename BOperator1, typename BOperator2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type,
+         cls::is_container<Container2>::value>::type,
          typename T = decltype(declval<typename cls::container_value<Container1>::type>() *
                                declval<typename cls::container_value<Container2>::type>())>
 inline T inner_product(Container1&& container1, Container2&& container2,
@@ -631,7 +872,7 @@ inline T inner_product(Container1&& container1, Container2&& container2,
 
 template<typename Container1, typename Container2,
          typename U = typename enable_if<cls::is_container<Container1>::value &&
-                                         cls::is_container<Container2>::value>::type,
+         cls::is_container<Container2>::value>::type,
          typename T, typename BOperator1, typename BOperator2>
 inline T inner_product(Container1&& container1, Container2&& container2,
                        T init, BOperator1 sum_op, BOperator2 mul_op)
