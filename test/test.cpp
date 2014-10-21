@@ -146,7 +146,7 @@ void algTest()
 }
 
 int main(/*int argc, char* argv[]*/)
-try {
+TRY_BEGIN
 #if CPP11_SUPPORT
   #if CPP14_SUPPORT
     cout << "C++14 enabled" << endl;
@@ -298,12 +298,15 @@ try {
 //                   "vector<int>::const_iterator is not an random access iterator");
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
-
+    bit_field.test(100);
     return 0;
-}
-catch (const FileExcept& err) {
-    cerr << err.what() << endl;
-}
-catch (...) {
-    cerr << "Unknow exception!" << endl;
-}
+
+#if CLS_HAS_EXCEPT
+CATCH(const FileExcept& err)
+cerr << err.what() << endl;
+
+CATCH_ALL
+cerr << "Unknow exception!" << endl;
+#endif
+
+CATCH_END

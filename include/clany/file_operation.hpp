@@ -45,11 +45,13 @@
 _CLANY_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;
 
+#if CLS_HAS_EXCEPT
 class FileExcept :public runtime_error
 {
 public:
     FileExcept(const string& err_msg) :runtime_error(err_msg) {};
 };
+#endif
 
 
 inline string readFile(const string& file_name)

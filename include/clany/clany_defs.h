@@ -93,7 +93,7 @@
 #endif
 
 #ifndef CLS_HAS_EXCEPT
-#  define CLS_HAS_EXCEPT 0
+#  define CLS_HAS_EXCEPT 1
 #endif
 
 #undef TRY_BEGIN
@@ -103,15 +103,18 @@
 #undef THROW
 #undef RETHROW
 #if CLS_HAS_EXCEPT
-#  define TRY_BEGIN  try {
-#  define CATCH(x)   } catch (x) {
-#  define CATCH_ALL  } catch (...) {
-#  define CATCH_END  }
+#  define TRY_BEGIN try {
+#  define TRY_END
+#  define CATCH(x)  } catch (x) {
+#  define CATCH_ALL } catch (...) {
+#  define CATCH_END }
 
 #  define THROW(x)  throw x
 #  define RETHROW   throw
 #else
-#  define TRY_BEGIN
+#  define TRY_BEGIN {
+#  define TRY_END   }
+#  define CATCH_END
 #endif
 
 // Some useful typedef
