@@ -10,7 +10,8 @@ using namespace cls;
 
 _CLANY_BEGIN
 struct Shape {
-    using Ptr = shared_ptr < Shape > ;
+public:
+    using Ptr = shared_ptr<Shape>;
 
     virtual void draw() { cout << "drawing a shape" << endl; }
 };
@@ -113,7 +114,8 @@ void algTest()
     }));
 
     const uint SEED = random_device()();
-    auto  rd_engine = default_random_engine(SEED);
+    auto  rd_engine = bind(uniform_int_distribution<> {1, 20},
+                           default_random_engine {SEED});
     generate(arr1, rd_engine);
     remove_copy_if(arr1, vec1, [](int ele) { return ele % 2 != 0; });
     rotate_copy(vec2, 3, begin(arr1));
@@ -132,9 +134,10 @@ void algTest()
                                 [](int   ele1, float ele2) { return ele1 / ele2; });
     DBGVAR(cout, inprod);
 
-    swap(vec1[3], vec1[5]);
+    vec1.resize(10);
+    generate(vec1, rd_engine);
     partial_sort(vec1, 3);
-    ASSERT(4 == distance(vec1.begin(), is_sorted_until(vec1)));
+    ASSERT(4 <= distance(vec1.begin(), is_sorted_until(vec1)));
     sort(vec1, greater<int>());
 
     auto minmax_val = minmax_element(arr1);
@@ -144,6 +147,13 @@ void algTest()
 
 int main(/*int argc, char* argv[]*/)
 {
+#if CPP11_SUPPORT
+  #if CPP14_SUPPORT
+    cout << "C++14 enabled" << endl;
+  #else
+    cout << "C++11 enabled" << endl;
+  #endif
+#endif
     CPUTimer timer;
 
     algTest();
@@ -254,23 +264,40 @@ int main(/*int argc, char* argv[]*/)
     timer.elapsed();
 
     // Iterator type traits
-//     static_assert(is_iterator<Shape>::value, "Shape is not an iterator");
-//     static_assert(is_iterator<Shape*>::value, "Shape* is not an iterator");
-//     static_assert(is_const_iterator<const int>::value, "const int is not a const iterator");
-//     static_assert(is_const_iterator<const Shape*>::value, "const Shape* is not a const iterator");
-//     static_assert(is_const_iterator<vector<int>::iterator>::value, "vector<int>::iterator is not a const iterator");
-//     static_assert(is_const_iterator<vector<int>::const_iterator>::value, "vector<int>::const_iterator is not a const iterator");
-//     static_assert(is_input_iterator<vector<int>::iterator&>::value, "vector<int>::iterator is not an input iterator");
-//     static_assert(is_input_iterator<ostream_iterator<int>>::value, "ostream_iterator<int> is not an input iterator");
-//     static_assert(is_output_iterator<ostream_iterator<int>>::value, "ostream_iterator<int> is not an output iterator");
-//     static_assert(is_output_iterator<istream_iterator<int>>::value, "istream_iterator<int> is not an output iterator");
-//     static_assert(is_output_iterator<vector<int>::const_iterator>::value, "vector<int>::const_iterator is not an output iterator");
-//     static_assert(is_forward_iterator<forward_list<int>::iterator>::value, "forward_list<int>::iterator is not an forward iterator");
-//     static_assert(is_bidirectional_iterator<forward_list<int>::iterator>::value, "forward_list<int>::iterator is not an bidirectional iterator");
-//     static_assert(is_bidirectional_iterator<list<int>::iterator>::value, "list<int>::iterator is not an bidirectional iterator");
-//     static_assert(is_random_access_iterator<forward_list<int>::iterator>::value, "forward_list<int>::iterator is not an random access iterator");
-//     static_assert(is_random_access_iterator<vector<int>::const_iterator>::value, "vector<int>::const_iterator is not an random access iterator");
-//     static_assert(is_random_access_iterator<Shape*>::value, "Shape* is not an random access iterator");
+//     static_assert(is_iterator<Shape>::value,
+//                   "Shape is not an iterator");
+//     static_assert(is_iterator<Shape*>::value,
+//                   "Shape* is not an iterator");
+//     static_assert(is_const_iterator<const int>::value,
+//                   "const int is not a const iterator");
+//     static_assert(is_const_iterator<const Shape*>::value,
+//                   "const Shape* is not a const iterator");
+//     static_assert(is_const_iterator<vector<int>::iterator>::value,
+//                   "vector<int>::iterator is not a const iterator");
+//     static_assert(is_const_iterator<vector<int>::const_iterator>::value,
+//                   "vector<int>::const_iterator is not a const iterator");
+//     static_assert(is_input_iterator<vector<int>::iterator&>::value,
+//                   "vector<int>::iterator is not an input iterator");
+//     static_assert(is_input_iterator<ostream_iterator<int>>::value,
+//                   "ostream_iterator<int> is not an input iterator");
+//     static_assert(is_output_iterator<ostream_iterator<int>>::value,
+//                   "ostream_iterator<int> is not an output iterator");
+//     static_assert(is_output_iterator<istream_iterator<int>>::value,
+//                   "istream_iterator<int> is not an output iterator");
+//     static_assert(is_output_iterator<vector<int>::const_iterator>::value,
+//                   "vector<int>::const_iterator is not an output iterator");
+//     static_assert(is_forward_iterator<forward_list<int>::iterator>::value,
+//                   "forward_list<int>::iterator is not an forward iterator");
+//     static_assert(is_bidirectional_iterator<forward_list<int>::iterator>::value,
+//                   "forward_list<int>::iterator is not an bidirectional iterator");
+//     static_assert(is_bidirectional_iterator<list<int>::iterator>::value,
+//                   "list<int>::iterator is not an bidirectional iterator");
+//     static_assert(is_random_access_iterator<forward_list<int>::iterator>::value,
+//                   "forward_list<int>::iterator is not an random access iterator");
+//     static_assert(is_random_access_iterator<vector<int>::const_iterator>::value,
+//                   "vector<int>::const_iterator is not an random access iterator");
+//     static_assert(is_random_access_iterator<Shape*>::value,
+//                   "Shape* is not an random access iterator");
 
     return 0;
 }

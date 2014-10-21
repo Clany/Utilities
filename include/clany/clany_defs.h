@@ -84,14 +84,34 @@
 #  define TRACE(...) ((void)0)
 #endif
 
+// Exception macros
 #  undef NOEXCEPT
-#  undef CONSTEXPR
 #if !(__cplusplus >= 201103L)
 #  define NOEXCEPT throw()
-#  define CONSTEXPR const
 #else
 #  define NOEXCEPT noexcept
-#  define CONSTEXPR constexpr
+#endif
+
+#ifndef CLS_HAS_EXCEPT
+#  define CLS_HAS_EXCEPT 0
+#endif
+
+#undef TRY_BEGIN
+#undef CATCH
+#undef CATCH_ALL
+#undef CATCH_END
+#undef THROW
+#undef RETHROW
+#if CLS_HAS_EXCEPT
+#  define TRY_BEGIN  try {
+#  define CATCH(x)   } catch (x) {
+#  define CATCH_ALL  } catch (...) {
+#  define CATCH_END  }
+
+#  define THROW(x)  throw x
+#  define RETHROW   throw
+#else
+#  define TRY_BEGIN
 #endif
 
 // Some useful typedef
