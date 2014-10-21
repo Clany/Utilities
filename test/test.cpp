@@ -146,7 +146,7 @@ void algTest()
 }
 
 int main(/*int argc, char* argv[]*/)
-{
+try {
 #if CPP11_SUPPORT
   #if CPP14_SUPPORT
     cout << "C++14 enabled" << endl;
@@ -300,4 +300,10 @@ int main(/*int argc, char* argv[]*/)
 //                   "Shape* is not an random access iterator");
 
     return 0;
+}
+catch (const FileExcept& err) {
+    cerr << err.what() << endl;
+}
+catch (...) {
+    cerr << "Unknow exception!" << endl;
 }
