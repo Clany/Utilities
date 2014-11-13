@@ -146,13 +146,11 @@ void algTest()
 }
 
 int main(/*int argc, char* argv[]*/)
-try {
-#if CPP11_SUPPORT
-  #if CPP14_SUPPORT
-    cout << "C++14 enabled" << endl;
-  #else
-    cout << "C++11 enabled" << endl;
-  #endif
+TRY_BEGIN
+#if CPP14_SUPPORT
+  cout << "C++14 enabled" << endl;
+#elif CPP11_SUPPORT
+  cout << "C++11 enabled" << endl;
 #endif
     CPUTimer timer;
 
@@ -248,9 +246,10 @@ try {
     shape = rect_factory(16, 10);
     shape = rect_factory(9);
 
-    using ShapeFactory = ObjFactory<Shape, string, Shape::Ptr(int)>;
-    ShapeFactory::addType("Rect", Factory<Rect>());
-    ShapeFactory::addType("Square",    Factory<Square>());
+
+    using ShapeFactory = ObjFactory<Shape, string, unique_ptr<Shape>(int)>;
+    ShapeFactory::addType<Rect>("Rect");
+    ShapeFactory::addType("Square", Factory<Square>());
 
     shape = ShapeFactory::create("Rect", 7);
     shape->draw();
@@ -298,12 +297,16 @@ try {
 //                   "vector<int>::const_iterator is not an random access iterator");
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
-
+    bit_field.test(10);
     return 0;
-}
-catch (const FileExcept& err) {
-    cerr << err.what() << endl;
-}
-catch (...) {
-    cerr << "Unknow exception!" << endl;
-}
+TRY_END
+
+#if CLS_HAS_EXCEPT
+CATCH(const FileExcept& err)
+cerr << err.what() << endl;
+
+CATCH_ALL
+cerr << "Unknown exception!" << endl;
+
+CATCH_END
+#endif

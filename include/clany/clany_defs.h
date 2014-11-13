@@ -84,14 +84,33 @@
 #  define TRACE(...) ((void)0)
 #endif
 
-#  undef NOEXCEPT
-#  undef CONSTEXPR
-#if !(__cplusplus >= 201103L)
-#  define NOEXCEPT throw()
-#  define CONSTEXPR const
+// Exception macros
+#ifndef CLS_HAS_EXCEPT
+#  define CLS_HAS_EXCEPT 1
+#endif
+
+#undef TRY_BEGIN
+#undef CATCH
+#undef CATCH_ALL
+#undef CATCH_END
+#undef THROW
+#undef RETHROW
+#if CLS_HAS_EXCEPT
+#  define TRY_BEGIN try {
+#  define TRY_END
+#  define CATCH(x)  } catch (x) {
+#  define CATCH_ALL } catch (...) {
+#  define CATCH_END }
+
+#  define THROW(x)  throw x
+#  define RETHROW   throw
 #else
-#  define NOEXCEPT noexcept
-#  define CONSTEXPR constexpr
+#  define TRY_BEGIN {
+#  define TRY_END   }
+#  define CATCH_END
+
+#  define THROW(x)  ((void)0)
+#  define RETHROW
 #endif
 
 // Some useful typedef
@@ -108,7 +127,7 @@ using llong  = long long;
 #define CLANG_VERSION (__clang_major__ * 100 +\
                        __clang_minor__)
 #define CPP11_SUPPORT (GCC_VERSION >= 408 || CLANG_VERSION >= 303 || _MSC_VER >= 1900)
-#define CPP14_SUPPORT (GCC_VERSION >= 409 || CLANG_VERSION >= 304)
+#define CPP14_SUPPORT (GCC_VERSION >= 409 || CLANG_VERSION >= 304 || _MSC_VER >= 1900)
 
 _CLANY_BEGIN
 using namespace std;

@@ -118,7 +118,9 @@ public:
     size_t size() const { return bit_size; }
 
     bool test(size_t idx) const {
+#if CLS_HAS_EXCEPT
         if (idx >= bit_size) throw range_error("bitset subscript out of range");
+#endif
         return (*this)[idx];
     }
 

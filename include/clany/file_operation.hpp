@@ -25,6 +25,7 @@
 #ifndef CLS_FILE_HANDLE_HPP
 #define CLS_FILE_HANDLE_HPP
 
+#include <iostream>
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -44,18 +45,25 @@
 _CLANY_BEGIN
 typedef istreambuf_iterator<char> ifsbuf_iter;
 
+#if CLS_HAS_EXCEPT
 class FileExcept :public runtime_error
 {
 public:
     FileExcept(const string& err_msg) :runtime_error(err_msg) {};
 };
+#endif
 
 
 inline string readFile(const string& file_name)
 {
     ifstream ifs(file_name);
     if (!ifs.is_open()) {
+#if CLS_HAS_EXCEPT
         throw FileExcept("Could not open file " + file_name);
+#else
+        cerr << "Fail to open the file" << endl;
+        return string("");
+#endif
     }
 
     return string(ifsbuf_iter(ifs), ifsbuf_iter());
@@ -65,7 +73,12 @@ inline vector<char> readBinaryFile(const string& file_name)
 {
     ifstream ifs(file_name, ios::binary);
     if (!ifs) {
+#if CLS_HAS_EXCEPT
         throw FileExcept("Could not open file " + file_name);
+#else
+        cerr << "Fail to open the file" << endl;
+        return vector<char>();
+#endif
     }
 
     return vector<char>(ifsbuf_iter(ifs), ifsbuf_iter());
@@ -97,7 +110,12 @@ inline string getLineStr(const string& file_name, int num)
 {
     ifstream ifs(file_name);
     if (!ifs) {
+#if CLS_HAS_EXCEPT
         throw FileExcept("Could not open file " + file_name);
+#else
+        cerr << "Fail to open the file" << endl;
+        return string("");
+#endif
     }
 
     return getLineStr(ifs, num);
