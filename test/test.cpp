@@ -298,7 +298,7 @@ TRY_BEGIN
 //                   "vector<int>::const_iterator is not an random access iterator");
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
-    bit_field.test(100);
+    bit_field.test(10);
     return 0;
 
 #if CLS_HAS_EXCEPT
@@ -306,7 +306,7 @@ CATCH(const FileExcept& err)
 cerr << err.what() << endl;
 
 CATCH_ALL
-cerr << "Unknow exception!" << endl;
+cerr << "Unknown exception!" << endl;
 #endif
 
 CATCH_END
