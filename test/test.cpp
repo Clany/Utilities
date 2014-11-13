@@ -147,12 +147,10 @@ void algTest()
 
 int main(/*int argc, char* argv[]*/)
 TRY_BEGIN
-#if CPP11_SUPPORT
-  #if CPP14_SUPPORT
-    cout << "C++14 enabled" << endl;
-  #else
-    cout << "C++11 enabled" << endl;
-  #endif
+#if CPP14_SUPPORT
+  cout << "C++14 enabled" << endl;
+#elif CPP11_SUPPORT
+  cout << "C++11 enabled" << endl;
 #endif
     CPUTimer timer;
 
@@ -248,9 +246,10 @@ TRY_BEGIN
     shape = rect_factory(16, 10);
     shape = rect_factory(9);
 
-    using ShapeFactory = ObjFactory<Shape, string, Shape::Ptr(int)>;
-    ShapeFactory::addType("Rect", Factory<Rect>());
-    ShapeFactory::addType("Square",    Factory<Square>());
+
+    using ShapeFactory = ObjFactory<Shape, string, unique_ptr<Shape>(int)>;
+    ShapeFactory::addType<Rect>("Rect");
+    ShapeFactory::addType("Square", Factory<Square>());
 
     shape = ShapeFactory::create("Rect", 7);
     shape->draw();
@@ -300,6 +299,7 @@ TRY_BEGIN
 //                   "Shape* is not an random access iterator");
     bit_field.test(10);
     return 0;
+TRY_END
 
 #if CLS_HAS_EXCEPT
 CATCH(const FileExcept& err)
@@ -307,6 +307,6 @@ cerr << err.what() << endl;
 
 CATCH_ALL
 cerr << "Unknown exception!" << endl;
-#endif
 
 CATCH_END
+#endif
