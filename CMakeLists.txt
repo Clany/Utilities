@@ -8,9 +8,11 @@ list(APPEND CMAKE_MODULE_PATH
 include(Utilities)
 
 find_compiler(
-  GNU   4.7  "-std=c++11 -Wall -Wextra -Wno-unused-variable\
+  GNU   4.7  "-std=c++11 -Wall -Wextra\
+              -Wno-unused-variable\
               -Wno-unused-but-set-variable"
-  Clang 3.2  "-std=c++11 -Wall -Wextra -Wno-unused-variable"
+  Clang 3.2  "-std=c++11 -Wall -Wextra\
+              -Wno-unused-variable"
   MSVC  2013 "/W4"
 )
 
