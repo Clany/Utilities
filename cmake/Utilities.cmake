@@ -32,8 +32,11 @@ function(detect_compiler COMPILER REQUIRED_VERSION)
     message(FATAL_ERROR "${COMPILER_STRING} version need to be at leaset ${VERSION_STRING}")
   endif()
 
-  if(NOT MSVC AND NOT (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG" PARENT_SCOPE)
+#  if(NOT MSVC AND NOT (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
+  if(CMAKE_BUILD_TYPE)
+    if(NOT (${CMAKE_BUILD_TYPE} STREQUAL "Debug"))
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG" PARENT_SCOPE)
+    endif()
   endif()
 endfunction()
 
