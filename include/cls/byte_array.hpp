@@ -31,7 +31,7 @@
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
-#include "clany_defs.h"
+#include "cls_defs.h"
 
 _CLANY_BEGIN
 class ByteArray : public vector<char> {

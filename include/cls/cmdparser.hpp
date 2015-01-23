@@ -29,7 +29,7 @@
 #include <map>
 #include <sstream>
 #include <stdexcept>
-#include "clany_defs.h"
+#include "cls_defs.h"
 
 _CLANY_BEGIN
 class ParseError : public logic_error {

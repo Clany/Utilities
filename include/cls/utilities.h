@@ -25,7 +25,7 @@
 #ifndef CLS_UTILITIES_H
 #define CLS_UTILITIES_H
 
-#include "clany_defs.h"
+#include "cls_defs.h"
 #include "cmdparser.hpp"
 #include "timer.hpp"
 #include "file_operation.hpp"

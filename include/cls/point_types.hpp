@@ -29,7 +29,7 @@
 #include <iterator>
 #include <iostream>
 #include <memory>
-#include "clany_defs.h"
+#include "cls_defs.h"
 
 _CLANY_BEGIN
 #define CLS_ADD_RGB \
