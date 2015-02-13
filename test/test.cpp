@@ -55,6 +55,8 @@ void algTest()
 
     vector<int> vec1 {9, 3, 5, 7, 9, 13, 9, 17, 17, 9};
     int arr1[] = {9, 3, 5, 7, 3, 11, 9, 1, 13, 9};
+    cout << vec1 << endl;
+
     bool all_odd = all_of(vec1, [](int ele) { return ele % 2 == 1; });
     ASSERT(all_odd);
     all_odd = none_of(arr1, [](int ele) { return ele % 2 == 0; });
@@ -298,6 +300,7 @@ TRY_BEGIN
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
     bit_field.test(10);
+
     return 0;
 TRY_END
 
