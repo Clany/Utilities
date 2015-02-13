@@ -55,7 +55,7 @@ set(SRC_LIST
 )
 
 set(HEADER_LIST
-  include/cls/clany_defs.h
+  include/cls/cls_defs.h
   include/cls/utilities.h
   include/cls/algorithm.hpp
   include/cls/timer.hpp

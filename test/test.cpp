@@ -150,9 +150,9 @@ void algTest()
 int main(/*int argc, char* argv[]*/)
 TRY_BEGIN
 #if CPP14_SUPPORT
-  cout << "C++14 enabled" << endl;
+    cout << "C++14 enabled" << endl;
 #elif CPP11_SUPPORT
-  cout << "C++11 enabled" << endl;
+    cout << "C++11 enabled" << endl;
 #endif
     CPUTimer timer;
 
@@ -257,6 +257,9 @@ TRY_BEGIN
     shape->draw();
     shape = ShapeFactory::create("Square", 9);
     shape->draw();
+    auto s = ObjFactory<Shape>::create<Rect>(3, 4);
+    s = Factory<Rect>().create(3, 4);
+    s->draw();
 
     ShapeFactory::removeType("Square");
     shape = ShapeFactory::create("Square", 5);
