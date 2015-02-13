@@ -33,7 +33,7 @@
 #include <iomanip>
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 class ByteArray : public vector<char> {
 public:
     using Base = vector<char>;
@@ -124,7 +124,7 @@ inline ostream& operator<<(ostream& os, const ByteArray& byte_arr)
     os << ss.str();
     return os;
 }
-_CLANY_END
+_CLS_END
 
 
 

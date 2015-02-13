@@ -8,7 +8,7 @@
 using namespace std;
 using namespace cls;
 
-_CLANY_BEGIN
+_CLS_BEGIN
 struct Shape {
 public:
     using Ptr = shared_ptr<Shape>;
@@ -39,7 +39,7 @@ struct Square final : Rect {
 
     int w;
 };
-_CLANY_END
+_CLS_END
 
 struct CmdArgs {
     string name       = "";

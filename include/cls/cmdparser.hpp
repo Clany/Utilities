@@ -31,7 +31,7 @@
 #include <stdexcept>
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 class ParseError : public logic_error {
 public:
     explicit ParseError(const std::string& err_msg)
@@ -253,6 +253,6 @@ inline string CmdLineParser::parse<string>(const string& name) {
     return parsed_arg;
 }
 
-_CLANY_END
+_CLS_END
 
 #endif // CLS_CMDPARSER_HPP

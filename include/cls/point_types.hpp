@@ -31,7 +31,7 @@
 #include <memory>
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 #define CLS_ADD_RGB \
 union \
 { \
@@ -243,6 +243,6 @@ public:
     int width;
     int height;
 };
-_CLANY_END
+_CLS_END
 
 #endif // CLS_POINT_TYPES_HPP

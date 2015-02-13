@@ -30,7 +30,7 @@
 #include <functional>
 #include "cls_defs.h"
 
-_CLANY_BEGIN
+_CLS_BEGIN
 template<typename T>
 class Factory
 {
@@ -105,7 +105,7 @@ private:
 
     map<IDType, Creator> creators_map;
 };
-_CLANY_END
+_CLS_END
 
 
 // Use these macro in *.cpp file

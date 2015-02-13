@@ -30,7 +30,7 @@
 #include <functional>
 #include "traits.hpp"
 
-namespace cls {
+_CLS_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 // Bring all overloaded std funtions to current namespace
 using std::all_of;
@@ -957,6 +957,6 @@ inline T inner_product(Container1&& container1, Container2&& container2,
     return inner_product(begin(container1), end(container1),
                          begin(container2), init, sum_op, mul_op);
 }
-} // End of namespace std
+_CLS_END
 
 #endif // CLS_ALGORITHM_HPP
