@@ -1,16 +1,24 @@
-utilities
+Utilities
 =========
 
-Some useful utilities, factory.hpp needs C++11 comiler support
+algorithm.hpp: Container based STL algorithms, and an overload of "<<" which can print the contents of a STL container.
 
-timer.hpp: Contain CPUTimer and ScopeTimer classes.
+traits.hpp: Iterator and container type traits.
 
-factory.hpp: Contain Generic Factory and ObjFactory classes.
+byte_array.hpp & dyn_bitset.hpp: Dynamic size byte array and bitset.
 
-eigen.hpp: Some simple decomposition wrapper using Eigen library, include QR, RQ, SVD
+cmdparser.hpp: Commandline parser class, usage is similar to "getopt()" under linux
 
-file_operation.hpp: contain some simple functions. 
+timer.hpp: CPUTimer and ScopeTimer classes.
 
-to compile the sample.cpp:
+factory.hpp: Contain generic ObjFactory classes that implement factory pattern.
 
-g++ -std=c++11 sample.cpp -o run
+eigen.hpp: Some matrix decomposition functions based on Eigen library, including QR, RQ, SVD
+
+file_operation.hpp: File operation functions (to be improved using C++17's file_system).
+
+point_types.hpp: 2D and 3D point type classes.
+
+Example
+=========
+Examples of usage are in a simple source file: sample.cpp
