@@ -105,12 +105,12 @@ template<typename T,
 inline ostream& operator<<(ostream& os, const Container<T>& c)
 {
     os << "[";
-    auto iter      = begin(c);
-    auto last_iter = next(iter, distance(begin(c), end(c)) - 1);
-    while (iter != last_iter) {
-        os << *iter++ << ", ";
+    auto first = begin(c);
+    auto last  = next(first, distance(first, end(c)) - 1);
+    while (first != last) {
+        os << *first++ << ", ";
     }
-    os << *last_iter << "]";
+    os << *last << "]";
 
     return os;
 }

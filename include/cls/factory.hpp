@@ -40,7 +40,11 @@ public:
     template<typename... Args>
     Ptr operator()(Args&&... args)
     {
+#if CPP14_SUPPORT
         return make_unique<T>(forward<Args>(args)...);
+#else
+        return Ptr(new T(forward<Args>(args)...));
+#endif
     };
 
     template<typename... Args>

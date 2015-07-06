@@ -1,9 +1,9 @@
 #include <iostream>
 #include <forward_list>
 #include <random>
-#include <clany/utilities.h>
-#include <clany/algorithm.hpp>
-#include <clany/dyn_bitset.hpp>
+#include <cls/utilities.h>
+#include <cls/algorithm.hpp>
+#include <cls/dyn_bitset.hpp>
 
 using namespace std;
 using namespace cls;
@@ -303,6 +303,7 @@ TRY_BEGIN
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
     bit_field.test(10);
+    cout << "\x61\x09\x41\n";
 
     return 0;
 TRY_END
