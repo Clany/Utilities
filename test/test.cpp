@@ -179,7 +179,7 @@ TRY_BEGIN
         "-p",
         "shit!",
         "--file",
-        "..\\CMakeLists.txt"
+        "..\\..\\CMakeLists.txt"
     };
 
     vector<LongOption> long_options = {

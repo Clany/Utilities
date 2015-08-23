@@ -127,7 +127,7 @@ using llong  = long long;
 #define CLANG_VERSION (__clang_major__ * 100 +\
                        __clang_minor__)
 #define CPP11_SUPPORT (GCC_VERSION >= 408 || CLANG_VERSION >= 303 || _MSC_VER >= 1900)
-#define CPP14_SUPPORT (GCC_VERSION >= 409 || CLANG_VERSION >= 304 || _MSC_VER >= 1900)
+#define CPP14_SUPPORT (GCC_VERSION >= 500 || CLANG_VERSION >= 304 || _MSC_VER >= 1900)
 
 _CLS_BEGIN
 using namespace std;
