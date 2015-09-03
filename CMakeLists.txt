@@ -3,7 +3,7 @@ project(utilities)
 
 list(APPEND CMAKE_MODULE_PATH
   ${PROJECT_SOURCE_DIR}/cmake
-  $ENV{DEV_LIBS}/clany/cmake
+  $ENV{DEV_LIBS}/cls/cmake
 )
 include(Utilities)
 
@@ -15,6 +15,7 @@ find_compiler(
               -Wno-unused-variable"
   MSVC  2013 "/W4"
 )
+set(CMAKE_CXX_STANDARD, 11)
 
 option(USE_MY_PATH "Use my own default library path" OFF)
 if(USE_MY_PATH)
