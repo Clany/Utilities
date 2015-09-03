@@ -100,7 +100,7 @@ inline size_t container_size(T(&)[N])
 
 // Helpler function that can print contents of a STL container
 template<typename T,
-         template<typename Ele, typename Alloc = std::allocator<Ele>> class Container,
+         template<typename Elem, typename Alloc = std::allocator<Elem>> class Container,
          typename U = enable_if_t<is_container<Container<T>>::value>>
 inline ostream& operator<<(ostream& os, const Container<T>& c)
 {

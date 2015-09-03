@@ -12,6 +12,7 @@ _CLS_BEGIN
 struct Shape {
 public:
     using Ptr = shared_ptr<Shape>;
+    virtual ~Shape() = default;
 
     virtual void draw() { cout << "drawing a shape" << endl; }
 };
@@ -21,6 +22,9 @@ struct Rect : Shape {
         : w(width), h(height) {};
     Rect(int width)
         : w(width), h(width) {};
+    ~Rect() {
+        cout << "Rect dctor called, width: " << w << " height: " << h << endl;
+    }
 
     void draw() override {
         cout << "drawing a Rect, width: " << w << " height: " << h << endl;
@@ -32,12 +36,25 @@ struct Rect : Shape {
 struct Square final : Rect {
     Square(int width)
         : Rect(width), w(width) {};
+    ~Square() {
+        cout << "Square dctor called, width: " << w << endl;
+    }
 
     void draw() override {
         cout << "drawing a square, width: " << w << endl;
     }
 
     int w;
+};
+
+struct Star final : Shape {
+    ~Star() {
+        cout << "Star dctor called" << endl;
+    }
+
+    void draw() override {
+        cout << "drawing a star\n";
+    }
 };
 _CLS_END
 
@@ -162,6 +179,7 @@ TRY_BEGIN
 
     BitField bit_field(13, "0110111010111");
     cout << bit_field << endl;
+    bit_field.test(10);
     for (auto i = 0; i < 13; ++i) {
         cout << bit_field[i];
     }
@@ -242,28 +260,31 @@ TRY_BEGIN
         TRACE("%s", text.c_str());
     }
 
-    // Factory method
+    // Factory pattern
     Shape::Ptr shape;
-    Factory<Rect> rect_factory;
-    shape = rect_factory(16, 10);
-    shape = rect_factory(9);
 
+    using ShapeFactory = Factory<Shape>;
+    // using ShapeFactory = Factory<Shape, string, unique_ptr>;
 
-    using ShapeFactory = ObjFactory<Shape, string, unique_ptr<Shape>(int)>;
-    ShapeFactory::addType<Rect>("Rect");
-    ShapeFactory::addType("Square", Factory<Square>());
+    ShapeFactory::addType<Rect, int>("Rect");
+    ShapeFactory::addType<Rect, int, int>("Rect");
+    ShapeFactory::addType<Square, int>("Square");
+    ShapeFactory::addType<Star>("Star");
 
     shape = ShapeFactory::create("Rect", 7);
     shape->draw();
+    shape = ShapeFactory::create("Rect", 3, 4);
+    shape->draw();
     shape = ShapeFactory::create("Square", 9);
     shape->draw();
-    auto s = ObjFactory<Shape>::create<Rect>(3, 4);
-    s = Factory<Rect>().create(3, 4);
-    s->draw();
+    shape = ShapeFactory::create("Star");
+    shape->draw();
 
-    ShapeFactory::removeType("Square");
+    ShapeFactory::removeType<int>("Square");
     shape = ShapeFactory::create("Square", 5);
-    if (!shape) cerr << "could not find type Square" << endl;
+    if (!shape) cout << "could not find type Square" << endl;
+
+    cout << "\x61\x09\x41\n";
 
     timer.elapsed();
 
@@ -302,8 +323,6 @@ TRY_BEGIN
 //                   "vector<int>::const_iterator is not an random access iterator");
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
-    bit_field.test(10);
-    cout << "\x61\x09\x41\n";
 
     return 0;
 TRY_END

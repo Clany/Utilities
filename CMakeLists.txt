@@ -8,10 +8,10 @@ list(APPEND CMAKE_MODULE_PATH
 include(Utilities)
 
 find_compiler(
-  GNU   4.7  "-std=c++11 -Wall -Wextra\
+  GNU   4.7  "-Wall -Wextra\
               -Wno-unused-variable\
               -Wno-unused-but-set-variable"
-  Clang 3.2  "-std=c++11 -Wall -Wextra\
+  Clang 3.2  "-Wall -Wextra\
               -Wno-unused-variable"
   MSVC  2013 "/W4"
 )
@@ -27,24 +27,24 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # find_package(Boost REQUIRED)
 # include_directories(${Boost_INCLUDE_DIRS})
 # target_link_libraries(<target> ${Boost_LIBRARIES})
-# 
+#
 # find_package(OpenCV REQUIRED)
 # include_directories(${OpenCV_INCLUDE_DIRS})
 # target_link_libraries(<target> ${OpenCV_LIBS})
-# 
+#
 # find_package(Eigen3 REQUIRED)
 # include_directories(${EIGEN3_INCLUDE_DIR})
-# 
+#
 # find_package(FFTW REQUIRED)
 # include_directories(${FFTW_INCLUDES})
 # target_link_libraries(<target> ${FFTW_LIBRARIES})
-# 
+#
 # find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
 # set(CMAKE_AUTOUIC ON)
 # set(CMAKE_AUTOMOC ON)
 # include_directories(${PROJECT_BINARY_DIR})
 # target_link_libraries(<target> Qt5::Core Qt5::Gui Qt5::Widgets)
-# 
+#
 # find_package(TBB REQUIRED)
 # include_directories(${TBB_INCLUDE_DIRS})
 # link_directories(${TBB_LIBRARY_DIRS}) # MSVC issue: could not find tbb_debug.lib

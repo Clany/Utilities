@@ -31,39 +31,29 @@
 #include "cls_defs.h"
 
 _CLS_BEGIN
-template<typename T>
-class Factory
-{
-    using Ptr = unique_ptr<T>;
-
-public:
+namespace detail {
+template<typename T, template<typename> class Ptr>
+struct FactoryCreator {
     template<typename... Args>
-    Ptr operator()(Args&&... args)
+    Ptr<T> operator()(Args&& ... args)
     {
-#if CPP14_SUPPORT
-        return make_unique<T>(forward<Args>(args)...);
-#else
-        return Ptr(new T(forward<Args>(args)...));
-#endif
+        return Ptr<T>(new T(forward<Args>(args)...));
     };
 
     template<typename... Args>
-    Ptr create(Args&&... args)
+    Ptr<T> create(Args&& ... args)
     {
         return (*this)(forward<Args>(args)...);
     };
 };
 
 
-template<typename BaseType, typename IDType = string,
-         typename CreateFunc = unique_ptr<BaseType>()>
-class ObjFactory
-{
+template<typename BaseType, typename IDType, template<typename> class Ptr, typename... CtorArgs>
+class ObjFactory {
 public:
-    using Creator = function<CreateFunc>;
-    using BasePtr = typename Creator::result_type;
+    using BasePtr = Ptr<BaseType>;
+    using Creator = function<BasePtr(CtorArgs...)>;
 
-public:
     static bool addType(const IDType& ID, const Creator& creator)
     {
         auto& creators = instance().creators_map;
@@ -78,7 +68,7 @@ public:
     template<typename T>
     static bool addType(const IDType& ID)
     {
-        return addType(ID, Factory<T>());
+        return addType(ID, FactoryCreator<T, Ptr>());
     }
 
     static bool removeType(const IDType& ID)
@@ -93,7 +83,7 @@ public:
     }
 
     template<typename... Args>
-    static BasePtr create(const IDType& ID, Args&&... args)
+    static BasePtr create(const IDType& ID, Args&& ... args)
     {
         auto& creators = instance().creators_map;
         auto iter = creators.find(ID);
@@ -104,16 +94,12 @@ public:
         return nullptr;
     }
 
-    template<typename T, typename... Args>
-    static BasePtr create(Args&&... args)
-    {
-        return Factory<T>()(forward<Args>(args)...);
-    }
-
 private:
-    ObjFactory() {};
+    ObjFactory() = default;
+
     ObjFactory(const ObjFactory&) = delete;
-    ObjFactory& operator= (const ObjFactory&) = delete;
+
+    ObjFactory& operator=(const ObjFactory&) = delete;
 
     static ObjFactory& instance()
     {
@@ -123,6 +109,34 @@ private:
 
     map<IDType, Creator> creators_map;
 };
+
+template<typename T>
+using unique_ptr = std::unique_ptr<T>;
+}
+
+template<typename Base, typename IDType = string, template<typename> class Ptr = detail::unique_ptr>
+struct Factory {
+    template<typename Derived, typename... CtorArgs>
+    static bool addType(const IDType& id)
+    {
+        return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::addType(
+                id, detail::FactoryCreator<Derived, Ptr>());
+    };
+
+    template<typename... CtorArgs>
+    static auto create(const IDType& id, CtorArgs&& ... args) -> Ptr<Base>
+    {
+        return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::create(
+                id, forward<CtorArgs>(args)...);
+    }
+
+    template<typename... CtorArgs>
+    static bool removeType(const IDType& ID)
+    {
+        return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::removeType(ID);
+    }
+};
+
 _CLS_END
 
 
