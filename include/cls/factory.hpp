@@ -34,10 +34,10 @@
 _CLS_BEGIN
 namespace detail {
 template<typename T>
-using smart_ptr = std::unique_ptr<T>;
+using unique_ptr = std::unique_ptr<T/*, default_delete<T>*/>;
 
-template<typename T, template<typename> class Ptr = smart_ptr>
-struct FactoryCreator {
+template<typename T, template<typename> class Ptr = detail::unique_ptr>
+struct ObjCreator {
     template<typename... Args>
     Ptr<T> operator()(Args&& ... args)
     {
@@ -73,10 +73,10 @@ public:
         return false;
     }
 
-    template<typename T>
+    template<typename Derived>
     bool addType(const IDType& ID)
     {
-        return addType(ID, FactoryCreator<T, Ptr>());
+        return addType(ID, ObjCreator<Derived, Ptr>());
     }
 
     virtual bool removeType(const IDType& ID) override
@@ -89,12 +89,11 @@ public:
         return false;
     }
 
-    template<typename... Args>
-    BasePtr create(const IDType& ID, Args&& ... args)
+    BasePtr create(const IDType& ID, CtorArgs&& ... args) const
     {
         auto iter = creators_map.find(ID);
         if (iter != creators_map.end()) {
-            return (iter->second)(forward<Args>(args)...);
+            return (iter->second)(forward<CtorArgs>(args)...);
         }
 
         return nullptr;
@@ -109,21 +108,36 @@ public:
 private:
     ObjFactory() = default;
 
-    ObjFactory(const ObjFactory&) = delete;
-
-    ObjFactory& operator=(const ObjFactory&) = delete;
-
     map<IDType, Creator> creators_map;
 };
 }
 
-template<typename Base, typename IDType = string, template<typename> class Ptr = detail::smart_ptr>
-struct Factory {
+template<typename Base, typename IDType = string, template<typename> class Ptr = detail::unique_ptr>
+class Factory {
+    using ObjFactoryBasePtr = detail::ObjFactoryBase<IDType>*;
+    template<typename... CtorArgs>
+    using ObjFactory = detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>;
+    template<typename... CtorArgs>
+    using Creator = typename ObjFactory<CtorArgs...>::Creator;
+
+public:
     template<typename Derived, typename... CtorArgs>
     static bool addType(const IDType& id)
     {
-        auto& obj_factory = detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::instance();
-        auto success =  obj_factory.addType(id, detail::FactoryCreator<Derived, Ptr>());
+        auto& obj_factory = ObjFactory<CtorArgs...>::instance();
+        auto success =  obj_factory.addType<Derived>(id);
+        if (success) {
+            instance().obj_factory_vec[id].emplace_back(&obj_factory);
+        }
+
+        return success;
+    };
+
+    template<typename Derived, typename... CtorArgs>
+    static bool addType(const IDType& id, const Creator<CtorArgs...>& creator)
+    {
+        auto& obj_factory = ObjFactory<CtorArgs...>::instance();
+        auto success =  obj_factory.addType(id, creator);
         if (success) {
             instance().obj_factory_vec[id].emplace_back(&obj_factory);
         }
@@ -132,17 +146,17 @@ struct Factory {
     };
 
     template<typename... CtorArgs>
-    static auto create(const IDType& id, CtorArgs&& ... args) -> Ptr<Base>
+    static Ptr<Base> create(const IDType& id, CtorArgs&& ... args)
     {
-        auto& obj_factory = detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::instance();
+        auto& obj_factory = ObjFactory<CtorArgs...>::instance();
         return obj_factory.create(id, forward<CtorArgs>(args)...);
     }
 
     static bool removeType(const IDType& ID)
     {
         bool success = true;
-        auto iter_range = instance().obj_factory_vec[ID];
-        for_each(iter_range, [&ID, &success](decltype(iter_range.front()) iter) {
+        auto& type_factories = instance().obj_factory_vec[ID];
+        for_each(type_factories, [&ID, &success](ObjFactoryBasePtr iter) {
             success &= iter->removeType(ID);
         });
 
@@ -156,7 +170,7 @@ struct Factory {
     }
 
 private:
-    map<IDType, vector<detail::ObjFactoryBase<IDType>*>> obj_factory_vec;
+    map<IDType, vector<ObjFactoryBasePtr>> obj_factory_vec;
 };
 
 _CLS_END

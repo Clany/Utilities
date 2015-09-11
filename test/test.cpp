@@ -264,7 +264,7 @@ TRY_BEGIN
     Shape::Ptr shape;
 
     using ShapeFactory = Factory<Shape>;
-    // using ShapeFactory = Factory<Shape, string, unique_ptr>;
+//    using ShapeFactory = Factory<Shape, string, shared_ptr>;
 
     ShapeFactory::addType<Rect, int>("Rect");
     ShapeFactory::addType<Rect, int, int>("Rect");
