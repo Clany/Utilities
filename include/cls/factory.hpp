@@ -33,10 +33,7 @@
 
 _CLS_BEGIN
 namespace detail {
-template<typename T>
-using unique_ptr = std::unique_ptr<T/*, default_delete<T>*/>;
-
-template<typename T, template<typename> class Ptr = detail::unique_ptr>
+template<typename T, template<typename...> class Ptr = unique_ptr>
 struct ObjCreator {
     template<typename... Args>
     Ptr<T> operator()(Args&& ... args)
@@ -57,7 +54,7 @@ public:
     virtual bool removeType(const IDType& ID) = 0;
 };
 
-template<typename BaseType, typename IDType, template<typename> class Ptr, typename... CtorArgs>
+template<typename BaseType, typename IDType, template<typename...> class Ptr, typename... CtorArgs>
 class ObjFactory : public ObjFactoryBase<IDType> {
 public:
     using BasePtr = Ptr<BaseType>;
@@ -112,11 +109,13 @@ private:
 };
 }
 
-template<typename Base, typename IDType = string, template<typename> class Ptr = detail::unique_ptr>
+template<typename Base, typename IDType = string, template<typename...> class Ptr = unique_ptr>
 class Factory {
     using ObjFactoryBasePtr = detail::ObjFactoryBase<IDType>*;
+
     template<typename... CtorArgs>
     using ObjFactory = detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>;
+
     template<typename... CtorArgs>
     using Creator = typename ObjFactory<CtorArgs...>::Creator;
 
