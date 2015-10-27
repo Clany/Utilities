@@ -323,6 +323,16 @@ TRY_BEGIN
 //                   "vector<int>::const_iterator is not an random access iterator");
 //     static_assert(is_random_access_iterator<Shape*>::value,
 //                   "Shape* is not an random access iterator");
+    string s0 = "Hello C++14!\n";
+    string& s1 = s0;
+    print("%s", string("Hello C++11!\n"));
+    print("s0: %s", s0);
+    print("s1: %s", s1);
+    print("%d %d\n");
+    print(L"%s %s\n");
+
+    ASSERT(L"hello" == stows(string("hello")));
+    ASSERT("hello" == wstos(wstring(L"hello")));
 
     return 0;
 TRY_END

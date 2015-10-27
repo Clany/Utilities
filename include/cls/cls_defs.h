@@ -22,8 +22,8 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef CLS_CLANY_DEFS_H
-#define CLS_CLANY_DEFS_H
+#ifndef CLS_DEFS_H
+#define CLS_DEFS_H
 
 #define _CLANY_BEGIN    namespace cls {
 #define _CLANY_END      }
@@ -31,9 +31,9 @@
 #define _CLS_END        }
 
 #if defined CLANYAPI_EXPORTS
-#  define CLANY_EXPORTS __declspec(dllexport)
+#  define CLS_EXPORTS __declspec(dllexport)
 #else
-#  define CLANY_EXPORTS
+#  define CLS_EXPORTS
 #endif
 
 // Define some macros for debugging use

@@ -26,9 +26,10 @@
 #define CLS_UTILITIES_H
 
 #include "cls_defs.h"
+#include "string.hpp"
 #include "cmdparser.hpp"
 #include "timer.hpp"
-#include "file_operation.hpp"
+#include "file_sys.hpp"
 #include "factory.hpp"
 #include "traits.hpp"
 

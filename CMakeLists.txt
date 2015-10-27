@@ -59,9 +59,10 @@ set(HEADER_LIST
   include/cls/cls_defs.h
   include/cls/utilities.h
   include/cls/algorithm.hpp
+  include/cls/string.hpp
   include/cls/timer.hpp
   include/cls/cmdparser.hpp
-  include/cls/file_operation.hpp
+  include/cls/file_sys.hpp
   include/cls/factory.hpp
   include/cls/traits.hpp
   include/cls/eigen.hpp
