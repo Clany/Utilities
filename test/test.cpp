@@ -264,7 +264,7 @@ TRY_BEGIN
     Shape::Ptr shape;
 
     using ShapeFactory = Factory<Shape>;
-    // using ShapeFactory = Factory<Shape, string, unique_ptr>;
+//    using ShapeFactory = Factory<Shape, string, shared_ptr>;
 
     ShapeFactory::addType<Rect, int>("Rect");
     ShapeFactory::addType<Rect, int, int>("Rect");
@@ -280,8 +280,10 @@ TRY_BEGIN
     shape = ShapeFactory::create("Star");
     shape->draw();
 
-    ShapeFactory::removeType<int>("Square");
-    shape = ShapeFactory::create("Square", 5);
+    ShapeFactory::removeType("Rect");
+    shape = ShapeFactory::create("Rect", 5);
+    if (!shape) cout << "could not find type Square" << endl;
+    shape = ShapeFactory::create("Rect", 5, 10);
     if (!shape) cout << "could not find type Square" << endl;
 
     cout << "\x61\x09\x41\n";

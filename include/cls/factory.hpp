@@ -1,4 +1,4 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////////
 // The MIT License(MIT)
 //
 // Copyright (c) 2014 Tiangang Song
@@ -28,12 +28,13 @@
 #include <map>
 #include <memory>
 #include <functional>
+#include "algorithm.hpp"
 #include "cls_defs.h"
 
 _CLS_BEGIN
 namespace detail {
-template<typename T, template<typename> class Ptr>
-struct FactoryCreator {
+template<typename T, template<typename...> class Ptr = unique_ptr>
+struct ObjCreator {
     template<typename... Args>
     Ptr<T> operator()(Args&&... args)
     {
@@ -47,59 +48,53 @@ struct FactoryCreator {
     };
 };
 
+template<typename IDType>
+class ObjFactoryBase {
+public:
+    virtual bool removeType(const IDType& ID) = 0;
+};
 
-template<typename BaseType, typename IDType, template<typename> class Ptr, typename... CtorArgs>
-class ObjFactory {
+template<typename BaseType, typename IDType, template<typename...> class Ptr, typename... CtorArgs>
+class ObjFactory : public ObjFactoryBase<IDType> {
 public:
     using BasePtr = Ptr<BaseType>;
     using Creator = function<BasePtr(CtorArgs...)>;
 
-    static bool addType(const IDType& ID, const Creator& creator)
+    bool addType(const IDType& ID, const Creator& creator)
     {
-        auto& creators = instance().creators_map;
-        if (creators.find(ID) == creators.end()) {
-            creators.insert({ID, creator});
+        if (creators_map.find(ID) == creators_map.end()) {
+            creators_map.insert({ID, creator});
             return true;
         }
 
         return false;
     }
 
-    template<typename T>
-    static bool addType(const IDType& ID)
+    template<typename Derived>
+    bool addType(const IDType& ID)
     {
-        return addType(ID, FactoryCreator<T, Ptr>());
+        return addType(ID, ObjCreator<Derived, Ptr>());
     }
 
-    static bool removeType(const IDType& ID)
+    virtual bool removeType(const IDType& ID) override
     {
-        auto& creators = instance().creators_map;
-        if (creators.find(ID) != creators.end()) {
-            creators.erase(ID);
+        if (creators_map.find(ID) != creators_map.end()) {
+            creators_map.erase(ID);
             return true;
         }
 
         return false;
     }
 
-    template<typename... Args>
-    static BasePtr create(const IDType& ID, Args&&... args)
+    BasePtr create(const IDType& ID, CtorArgs&&... args) const
     {
-        auto& creators = instance().creators_map;
-        auto iter = creators.find(ID);
-        if (iter != creators.end()) {
-            return (iter->second)(forward<Args>(args)...);
+        auto iter = creators_map.find(ID);
+        if (iter != creators_map.end()) {
+            return (iter->second)(forward<CtorArgs>(args)...);
         }
 
         return nullptr;
     }
-
-private:
-    ObjFactory() = default;
-
-    ObjFactory(const ObjFactory&) = delete;
-
-    ObjFactory& operator=(const ObjFactory&) = delete;
 
     static ObjFactory& instance()
     {
@@ -107,55 +102,83 @@ private:
         return obj_factory;
     }
 
+private:
+    ObjFactory() = default;
+
     map<IDType, Creator> creators_map;
 };
-
-template<typename T>
-using unique_ptr = std::unique_ptr<T>;
 }
 
-template<typename Base, typename IDType = string, template<typename> class Ptr = detail::unique_ptr>
-struct Factory {
+template<typename Base, typename IDType = string, template<typename...> class Ptr = unique_ptr>
+class Factory {
+    using ObjFactoryBasePtr = detail::ObjFactoryBase<IDType>*;
+
+    template<typename... CtorArgs>
+    using ObjFactory = detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>;
+
+    template<typename... CtorArgs>
+    using Creator = typename ObjFactory<CtorArgs...>::Creator;
+
+public:
     template<typename Derived, typename... CtorArgs>
     static bool addType(const IDType& id)
     {
-        return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::addType(
-                id, detail::FactoryCreator<Derived, Ptr>());
+        auto& obj_factory = ObjFactory<CtorArgs...>::instance();
+        auto success =  obj_factory.addType<Derived>(id);
+        if (success) {
+            instance().obj_factory_vec[id].emplace_back(&obj_factory);
+        }
+
+        return success;
+    };
+
+    template<typename Derived, typename... CtorArgs>
+    static bool addType(const IDType& id, const Creator<CtorArgs...>& creator)
+    {
+        auto& obj_factory = ObjFactory<CtorArgs...>::instance();
+        auto success =  obj_factory.addType(id, creator);
+        if (success) {
+            instance().obj_factory_vec[id].emplace_back(&obj_factory);
+        }
+
+        return success;
     };
 
     template<typename... CtorArgs>
-    static auto create(const IDType& id, CtorArgs&&... args) -> Ptr<Base>
+    static Ptr<Base> create(const IDType& id, CtorArgs&&... args)
     {
-        return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::create(
-                id, forward<CtorArgs>(args)...);
+        auto& obj_factory = ObjFactory<CtorArgs...>::instance();
+        return obj_factory.create(id, forward<CtorArgs>(args)...);
     }
 
-    template<typename... CtorArgs>
     static bool removeType(const IDType& ID)
     {
-        return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::removeType(ID);
+        bool success = true;
+        auto& type_factories = instance().obj_factory_vec[ID];
+        for_each(type_factories, [&ID, &success](ObjFactoryBasePtr iter) {
+            success &= iter->removeType(ID);
+        });
+
+        return success;
     }
+
+    static Factory& instance()
+    {
+        static Factory factory;
+        return factory;
+    }
+
+private:
+    map<IDType, vector<ObjFactoryBasePtr>> obj_factory_vec;
 };
 
 _CLS_END
 
-
-// Use these macro in *.cpp file
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Use these macros in *.cpp file
 #define REGISTER_TO_FACTORY(BaseType, DerivedType) \
 namespace { \
-    const bool ADD_##DerivedType = cls::ObjFactory<BaseType>::addType<DerivedType>(#DerivedType); \
-}
-
-// Have "typedef BaseType base" in derived class
-#define REGISTER_TYPE_TO_FACTORY(DerivedType) \
-namespace { \
-    const bool ADD_##DerivedType = cls::ObjFactory<DerivedType::base>::addType<DerivedType>(#DerivedType); \
-}
-
-// Custom creator
-#define REGISTER_TO_FACTORY_WITH_CTOR(BaseType, DerivedType, Creator) \
-namespace { \
-    const bool ADD_##DerivedType = cls::ObjFactory<BaseType, string, Creator>::addType<DerivedType>(#DerivedType); \
+    const bool ADD_##DerivedType = cls::Factory<BaseType>::addType<DerivedType>(#DerivedType); \
 }
 
 #endif // CLS_FACTORY_HPP
