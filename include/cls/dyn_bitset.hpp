@@ -109,8 +109,8 @@ public:
     }
 
     size_t count() const {
-        return accumulate(bit_field.begin(), bit_field.end(), 0,
-                          [](int init, const Byte& byte) {
+        return accumulate(bit_field.begin(), bit_field.end(), size_t(0),
+                          [](size_t init, const Byte& byte) {
             return init + byte.count();
         });
     }

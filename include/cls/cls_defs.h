@@ -30,7 +30,7 @@
 #define _CLS_BEGIN      namespace cls {
 #define _CLS_END        }
 
-#if defined CLANYAPI_EXPORTS
+#if defined CLSAPI_EXPORTS
 #  define CLS_EXPORTS __declspec(dllexport)
 #else
 #  define CLS_EXPORTS
@@ -133,4 +133,4 @@ _CLS_BEGIN
 using namespace std;
 _CLS_END
 
-#endif // CLS_CLANY_DEFS_H
+#endif // CLS_DEFS_H

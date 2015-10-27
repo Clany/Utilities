@@ -82,9 +82,9 @@ void algTest()
     for_each({7, 5, 9, 15, 3}, [](int ele) { cout << ele << " "; });
     cout << endl;
 
-    int nine_num = count(vec1, 9);
+    auto nine_num = count(vec1, 9);
     ASSERT(4 == nine_num);
-    int divide_by_three = count_if(arr1, [](int ele) { return ele % 3 == 0; });
+    auto divide_by_three = count_if(arr1, [](int ele) { return ele % 3 == 0; });
     ASSERT(5 == divide_by_three);
 
     auto non_eq = mismatch(vec1, arr1, less_equal<int>());
