@@ -73,14 +73,14 @@ private:
   int line    = 0;
 };
 
-void error(const Exception& exc)
+inline void error(const Exception& exc)
 {
   cerr << exc.what() << endl;
 
   throw exc;
 }
 
-void error(const string& err, const string& func, const string& file, int line)
+inline void error(const string& err, const string& func, const string& file, int line)
 {
   error(cls::Exception(err, func, file, line));
 }
