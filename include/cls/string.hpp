@@ -27,7 +27,6 @@
 
 #include <cstdio>
 #include <string>
-#include <functional>
 #include "cls_defs.h"
 
 _CLS_BEGIN

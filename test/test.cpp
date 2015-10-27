@@ -331,14 +331,17 @@ TRY_BEGIN
     print("%d %d\n");
     print(L"%s %s\n");
 
-    ASSERT(L"hello" == stows(string("hello")));
-    ASSERT("hello" == wstos(wstring(L"hello")));
+    CLS_Assert(L"hello" == stows(string("hello")));
+    CLS_Assert("hello" == wstos(wstring(L"hello")));
 
     return 0;
 TRY_END
 
 #if CLS_HAS_EXCEPT
 CATCH(const FileExcept& err)
+cerr << err.what() << endl;
+
+CATCH(const std::exception& err)
 cerr << err.what() << endl;
 
 CATCH_ALL

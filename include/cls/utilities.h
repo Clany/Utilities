@@ -26,6 +26,7 @@
 #define CLS_UTILITIES_H
 
 #include "cls_defs.h"
+#include "error.hpp"
 #include "string.hpp"
 #include "cmdparser.hpp"
 #include "timer.hpp"
