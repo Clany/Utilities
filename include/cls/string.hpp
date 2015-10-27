@@ -33,13 +33,13 @@
 _CLS_BEGIN
 namespace detail {
 template <typename T>
-T arg(T value) noexcept
+T argument(T value) noexcept
 {
     return value;
 }
 
 template <typename T>
-inline const T* arg(const std::basic_string<T>& value) noexcept
+inline const T* argument(const std::basic_string<T>& value) noexcept
 {
     return value.c_str();
 }
@@ -49,10 +49,10 @@ inline int formatStr(
     char* buffer,
     const size_t b_size,
     const char* const format,
-    Args&& ... args
+    const Args&... args
 ) noexcept
 {
-    int result = snprintf(buffer, b_size, format, arg(forward<Args>(args)) ...);
+    int result = snprintf(buffer, b_size, format, argument(args)...);
     ASSERT(-1 != result);
     return result;
 }
@@ -62,10 +62,10 @@ inline int formatStr(
     wchar_t* buffer,
     const size_t b_size,
     const wchar_t* const format,
-    Args&& ... args
+    const Args&... args
 ) noexcept
 {
-    int result = swprintf(buffer, b_size, format, arg(forward<Args>(args)) ...);
+    int result = swprintf(buffer, b_size, format, argument(args)...);
     ASSERT(-1 != result);
     return result;
 }
@@ -73,9 +73,9 @@ inline int formatStr(
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 template <typename... Args>
-inline void print(const char* const format, Args&& ... args) noexcept
+inline void print(const char* const format, const Args&... args) noexcept
 {
-    printf(format, detail::arg(forward<Args>(args))...);
+    printf(format, detail::argument(args)...);
 }
 
 inline void print(const char* const value) noexcept
@@ -95,17 +95,17 @@ inline void print(const std::basic_string<T>& value) noexcept
 }
 
 template <typename T, typename... Args>
-auto format(const T* const format, Args&&... args) -> std::basic_string<T>
+auto format(const T* const format, const Args&... args) -> std::basic_string<T>
 {
     static const size_t BUFFER_SIZE = 1024;
 
     std::basic_string<T> buffer(BUFFER_SIZE, '\0');
 
-    size_t size = detail::formatStr(&buffer[0], buffer.size() + 1, format, forward<Args>(args)...);
+    size_t size = detail::formatStr(&buffer[0], buffer.size() + 1, format, args...);
     if (size > buffer.size())
     {
         buffer.resize(size);
-        detail::formatStr(&buffer[0], buffer.size() + 1, format, forward<Args>(args)...);
+        detail::formatStr(&buffer[0], buffer.size() + 1, format, args...);
     }
     else if (size < buffer.size())
     {

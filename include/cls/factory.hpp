@@ -35,13 +35,13 @@ namespace detail {
 template<typename T, template<typename> class Ptr>
 struct FactoryCreator {
     template<typename... Args>
-    Ptr<T> operator()(Args&& ... args)
+    Ptr<T> operator()(Args&&... args)
     {
         return Ptr<T>(new T(forward<Args>(args)...));
     };
 
     template<typename... Args>
-    Ptr<T> create(Args&& ... args)
+    Ptr<T> create(Args&&... args)
     {
         return (*this)(forward<Args>(args)...);
     };
@@ -83,7 +83,7 @@ public:
     }
 
     template<typename... Args>
-    static BasePtr create(const IDType& ID, Args&& ... args)
+    static BasePtr create(const IDType& ID, Args&&... args)
     {
         auto& creators = instance().creators_map;
         auto iter = creators.find(ID);
@@ -124,7 +124,7 @@ struct Factory {
     };
 
     template<typename... CtorArgs>
-    static auto create(const IDType& id, CtorArgs&& ... args) -> Ptr<Base>
+    static auto create(const IDType& id, CtorArgs&&... args) -> Ptr<Base>
     {
         return detail::ObjFactory<Base, IDType, Ptr, CtorArgs...>::create(
                 id, forward<CtorArgs>(args)...);
