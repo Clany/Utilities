@@ -112,8 +112,9 @@ private:
 
 template<typename T>
 using unique_ptr = std::unique_ptr<T>;
-}
+} // End namespace detail
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename Base, typename IDType = string, template<typename> class Ptr = detail::unique_ptr>
 struct Factory {
     template<typename Derived, typename... CtorArgs>

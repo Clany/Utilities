@@ -109,8 +109,7 @@ public:
     }
 
     size_t count() const {
-        return accumulate(bit_field.begin(), bit_field.end(), size_t(0),
-                          [](size_t init, const Byte& byte) {
+        return accumulate(bit_field, size_t(0), [](size_t init, const Byte& byte) {
             return init + byte.count();
         });
     }
@@ -125,8 +124,7 @@ public:
     }
 
     bool any() const {
-        return any_of(bit_field.begin(), bit_field.end(),
-                      [](const Byte& byte) {
+        return any_of(bit_field, [](const Byte& byte) {
             return byte.any();
         });
     }
@@ -136,8 +134,7 @@ public:
     }
 
     bool all() const {
-        bool all_set =  all_of(bit_field.begin(), bit_field.end()-1,
-                      [](const Byte& byte) {
+        bool all_set =  all_of(bit_field, [](const Byte& byte) {
             return byte.all();
         });
         return all_set && bit_field.back().count() == last_size;
@@ -154,7 +151,7 @@ public:
     }
 
     DynBitset& reset() {
-        for_each(bit_field.begin(), bit_field.end(), [](Byte& byte) {
+        for_each(bit_field, [](Byte& byte) {
             byte.reset();
         });
         return (*this);

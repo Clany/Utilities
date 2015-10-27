@@ -32,7 +32,7 @@
 
 _CLS_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
-// Bring all overloaded std funtions to current namespace
+// Bring all overloaded std functions to current namespace
 using std::all_of;
 using std::any_of;
 using std::none_of;
@@ -896,8 +896,8 @@ inline void iota(Container& container, T value)
 }
 
 template<typename Container,
-         typename U = enable_if_t<is_container<Container>::value>,
-         typename T = container_value_t<Container>>
+         typename T = container_value_t<Container>,
+         typename U = enable_if_t<is_container<Container>::value>>
 inline T accumulate(Container&& container)
 {
     T init = T();
@@ -905,8 +905,8 @@ inline T accumulate(Container&& container)
 }
 
 template<typename Container, typename BOperator,
-         typename U = enable_if_t<is_container<Container>::value>,
-         typename T = container_value_t<Container>>
+         typename T = container_value_t<Container>,
+         typename U = enable_if_t<is_container<Container>::value>>
 inline T accumulate(Container&& container, BOperator op)
 {
     T init = T();
@@ -921,11 +921,11 @@ inline T accumulate(Container&& container, T init, BOperator op)
 }
 
 template<typename Container1, typename Container2,
-         typename U = enable_if_t<is_container<Container1>::value &&
-                                  is_container<Container2>::value>,
          typename T = decltype(
          declval<container_value_t<Container1>>() *
-         declval<container_value_t<Container2>>())>
+         declval<container_value_t<Container2>>()),
+         typename U = enable_if_t<is_container<Container1>::value &&
+                                  is_container<Container2>::value>>
 inline T inner_product(Container1&& container1, Container2&& container2)
 {
     T init = T();
@@ -935,10 +935,10 @@ inline T inner_product(Container1&& container1, Container2&& container2)
 
 template<typename Container1, typename Container2,
          typename BOperator1, typename BOperator2,
-         typename U = enable_if_t<is_container<Container1>::value &&
-                                  is_container<Container2>::value>,
          typename T = decltype(declval<container_value_t<Container1>>() *
-                               declval<container_value_t<Container2>>())>
+                               declval<container_value_t<Container2>>()),
+         typename U = enable_if_t<is_container<Container1>::value &&
+                                  is_container<Container2>::value>>
 inline T inner_product(Container1&& container1, Container2&& container2,
                        BOperator1 sum_op, BOperator2 mul_op)
 {
@@ -948,9 +948,9 @@ inline T inner_product(Container1&& container1, Container2&& container2,
 }
 
 template<typename Container1, typename Container2,
+         typename T, typename BOperator1, typename BOperator2,
          typename U = enable_if_t<is_container<Container1>::value &&
-                                  is_container<Container2>::value>,
-         typename T, typename BOperator1, typename BOperator2>
+                                  is_container<Container2>::value>>
 inline T inner_product(Container1&& container1, Container2&& container2,
                        T init, BOperator1 sum_op, BOperator2 mul_op)
 {

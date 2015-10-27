@@ -69,7 +69,7 @@ inline int formatStr(
     ASSERT(-1 != result);
     return result;
 }
-} // End namepsace detail
+} // End namespace detail
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 template <typename... Args>
@@ -129,7 +129,7 @@ inline std::string wstos(const wstring& wstr)
 
 inline std::wstring stows(const char* str)
 {
-    auto result = format(L"%s", str);
+    auto result = format(L"%hs", str);
     return result;
 }
 

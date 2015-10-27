@@ -197,7 +197,7 @@ TRY_BEGIN
         "-p",
         "shit!",
         "--file",
-        "..\\..\\CMakeLists.txt"
+        "cmake_install.cmake"
     };
 
     vector<LongOption> long_options = {
