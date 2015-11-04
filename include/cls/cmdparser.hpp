@@ -108,7 +108,7 @@ public:
 
     // Get the index of next option to be processed in argv
     int getIndex() const {
-        return next_idx + 1;    // Program name counts 1
+        return static_cast<int>(next_idx + 1);    // Program name counts 1
     }
 
     // Get argument of custom option

@@ -107,8 +107,9 @@ private:
 
     map<IDType, Creator> creators_map;
 };
-}
+} // End namespace detail
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 template<typename Base, typename IDType = string, template<typename...> class Ptr = unique_ptr>
 class Factory {
     using ObjFactoryBasePtr = detail::ObjFactoryBase<IDType>*;

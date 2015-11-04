@@ -58,6 +58,7 @@ set(SRC_LIST
 set(HEADER_LIST
   include/cls/cls_defs.h
   include/cls/utilities.h
+  include/cls/error.hpp
   include/cls/algorithm.hpp
   include/cls/string.hpp
   include/cls/timer.hpp
