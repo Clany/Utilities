@@ -165,7 +165,7 @@ void algTest()
 }
 
 int main(/*int argc, char* argv[]*/)
-TRY_BEGIN
+EXCEPT_BEGIN
 #if CPP14_SUPPORT
     cout << "C++14 enabled" << endl;
 #elif CPP11_SUPPORT
@@ -237,7 +237,6 @@ TRY_BEGIN
         default:
             cerr << "ERROR: Parsing fail!" << endl;
             exit(1);
-            break;
         }
     }
 
@@ -337,14 +336,8 @@ TRY_BEGIN
     CLS_Assert("hello" == wstos(wstring(L"hello")));
 
     return 0;
-TRY_END
 
-#if CLS_HAS_EXCEPT
 CATCH(const FileExcept& err)
 cerr << err.what() << endl;
 
-CATCH_ALL
-cerr << "Unknown exception!" << endl;
-
-CATCH_END
-#endif
+EXCEPT_END

@@ -96,20 +96,19 @@
 #undef THROW
 #undef RETHROW
 #if CLS_HAS_EXCEPT
-#  define TRY_BEGIN try {
-#  define TRY_END
-#  define CATCH(x)  } catch (x) {
-#  define CATCH_ALL } catch (...) {
-#  define CATCH_END }
+#  define EXCEPT_BEGIN try {
+#  define EXCEPT_END   } catch (const std::exception& e) { std::cerr << e.what() << std::endl;    \
+                       } catch (...) { std::cerr << "Unknown exception!" << std::endl; }
+#  define CATCH(x)     } catch (x) {
 
-#  define THROW(x)  throw x
-#  define RETHROW   throw
+#  define THROW(x)     throw x
+#  define RETHROW      throw
 #else
-#  define TRY_BEGIN {
-#  define TRY_END   }
-#  define CATCH_END
+#  define EXCEPT_BEGIN {{
+#  define EXCEPT_END   };}
+#  define CATCH(x)     } [](x) {
 
-#  define THROW(x)  ((void)0)
+#  define THROW(x)     ((void)0)
 #  define RETHROW
 #endif
 
