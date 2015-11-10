@@ -26,6 +26,7 @@
 #define CLS_STRING_HPP
 
 #include <cstdio>
+#include <iostream>
 #include <string>
 #include "cls_defs.h"
 

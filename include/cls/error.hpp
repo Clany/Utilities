@@ -28,7 +28,6 @@
 #include <cassert>
 #include <stdexcept>
 #include "string.hpp"
-#include "cls_defs.h"
 
 #if CPP11_SUPPORT
 #  define CLS_FUNC __func__
