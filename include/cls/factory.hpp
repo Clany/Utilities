@@ -25,6 +25,7 @@
 #ifndef CLS_FACTORY_HPP
 #define CLS_FACTORY_HPP
 
+#include <vector>
 #include <map>
 #include <memory>
 #include <functional>
