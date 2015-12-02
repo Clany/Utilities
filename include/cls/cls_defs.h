@@ -25,8 +25,6 @@
 #ifndef CLS_DEFS_H
 #define CLS_DEFS_H
 
-#define _CLANY_BEGIN    namespace cls {
-#define _CLANY_END      }
 #define _CLS_BEGIN      namespace cls {
 #define _CLS_END        }
 
@@ -36,7 +34,7 @@
 #  define CLS_EXPORTS
 #endif
 
-// Define some macros for debugging use
+// Macros for debugging use
 #undef ASSERT
 #undef VERIFY
 #undef DBGVAR
@@ -112,7 +110,7 @@
 #  define RETHROW
 #endif
 
-// Some useful typedef
+// Convenient type alias
 using ushort = unsigned short;
 using uchar  = unsigned char;
 using uint   = unsigned int;
@@ -120,7 +118,7 @@ using ulong  = unsigned long;
 using ullong = unsigned long long;
 using llong  = long long;
 
-// Define GCC and Clang Version
+// Detect GCC and Clang Version
 #define GCC_VERSION   (__GNUC__ * 100 +\
                        __GNUC_MINOR__)
 #define CLANG_VERSION (__clang_major__ * 100 +\
