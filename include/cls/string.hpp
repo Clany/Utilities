@@ -28,6 +28,8 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <codecvt>
+#include <locale>
 #include "cls_defs.h"
 
 _CLS_BEGIN
@@ -122,7 +124,7 @@ inline std::string wstos(const wchar_t* wstr)
     return result;
 }
 
-inline std::string wstos(const wstring& wstr)
+inline std::string wstos(const std::wstring& wstr)
 {
     return wstos(wstr.c_str());
 }
@@ -133,9 +135,21 @@ inline std::wstring stows(const char* str)
     return result;
 }
 
-inline std::wstring stows(const string& str)
+inline std::wstring stows(const std::string& str)
 {
     return stows(str.c_str());
+}
+
+inline std::string to_utf8(const std::wstring& wstr)
+{
+  static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  return converter.to_bytes(wstr);
+}
+
+inline std::wstring to_utf16(const std::string& str)
+{
+  static std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  return converter.from_bytes(str);
 }
 _CLS_END
 
