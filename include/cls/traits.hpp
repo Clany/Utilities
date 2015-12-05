@@ -48,6 +48,13 @@ template<typename T>
 struct remove_const_ref {
     using type = typename remove_const<typename remove_reference<T>::type>::type;
 };
+
+template <typename... Args>
+struct type_list
+{
+  template <size_t N>
+  using type = typename tuple_element<N, tuple<Args...>>::type;
+};
 //////////////////////////////////////////////////////////////////////////////////////////
 // Container traits
 template<typename T, typename = void>
