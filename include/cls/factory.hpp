@@ -178,9 +178,9 @@ _CLS_END
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Use these macros in *.cpp file
-#define REGISTER_TO_FACTORY(BaseType, DerivedType) \
+#define REGISTER_TO_FACTORY(BaseType, DerivedType, ...) \
 namespace { \
-    const bool ADD_##DerivedType = cls::Factory<BaseType>::addType<DerivedType>(#DerivedType); \
+    const bool ADD_##DerivedType = cls::Factory<BaseType>::addType<DerivedType, ##__VA_ARGS__>(#DerivedType); \
 }
 
 #endif // CLS_FACTORY_HPP
