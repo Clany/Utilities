@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
 project(utilities)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -10,20 +10,45 @@ list(APPEND CMAKE_MODULE_PATH
 include(Utilities)
 
 find_compiler(
-  GNU   4.7  "-Wall -Wextra\
+  GCC   5.0  "-Wall -Wextra\
               -Wno-unused-variable\
               -Wno-unused-but-set-variable"
-  Clang 3.2  "-Wall -Wextra\
+  Clang 3.4  "-Wall -Wextra\
               -Wno-unused-variable"
-  MSVC  2013 "/W4"
+  MSVC  2015 "/W4"
 )
 
 option(USE_MY_PATH "Use my own default library path" OFF)
 if(USE_MY_PATH)
-  add_default_lib_path($ENV{DEV_LIBS} $ENV{DEV_PLAT})
+    add_default_lib_path($ENV{DEV_LIBS} $ENV{DEV_PLAT})
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
+set(SRC_LIST
+  test/test.cpp
+)
+
+set(HEADER_LIST
+  include/cls/cls_defs.h
+  include/cls/utilities.h
+  include/cls/error.hpp
+  include/cls/algorithm.hpp
+  include/cls/string.hpp
+  include/cls/timer.hpp
+  include/cls/cmdparser.hpp
+  include/cls/file_sys.hpp
+  include/cls/factory.hpp
+  include/cls/traits.hpp
+  include/cls/eigen.hpp
+  include/cls/point_types.hpp
+  include/cls/byte_array.hpp
+  include/cls/dyn_bitset.hpp
+)
+
+add_executable(utilities ${SRC_LIST} ${HEADER_LIST})
+
+target_include_directories(utilities
+  PRIVATE ${PROJECT_SOURCE_DIR}/include
+)
 
 # find_package(Boost REQUIRED COMPONENTS filesystem thread)
 # find_package(Boost REQUIRED)
@@ -51,27 +76,3 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # include_directories(${TBB_INCLUDE_DIRS})
 # link_directories(${TBB_LIBRARY_DIRS}) # MSVC issue: could not find tbb_debug.lib
 # target_link_libraries(<target> ${TBB_LIBRARIES})
-
-set(SRC_LIST
-  test/test.cpp
-)
-
-set(HEADER_LIST
-  include/cls/cls_defs.h
-  include/cls/utilities.h
-  include/cls/error.hpp
-  include/cls/algorithm.hpp
-  include/cls/string.hpp
-  include/cls/timer.hpp
-  include/cls/cmdparser.hpp
-  include/cls/file_sys.hpp
-  include/cls/factory.hpp
-  include/cls/traits.hpp
-  include/cls/eigen.hpp
-  include/cls/point_types.hpp
-  include/cls/byte_array.hpp
-  include/cls/dyn_bitset.hpp
-)
-
-add_executable(utilities ${SRC_LIST} ${HEADER_LIST})
-# target_link_libraries(utilities)
